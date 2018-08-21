@@ -14,24 +14,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
-from flask import Flask
+from flask import Flask, jsonify, request
 
 app = Flask(__name__, static_url_path='/static')
+SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
+@app.route("/list")
+def list():
+    jsonlist = []
+    json_url = os.path.join(SITE_ROOT, 'static/maps')
+    for root, dirs, files in os.walk(json_url):
+        for name in files:
+            if name.endswith(".json"):
+                jsonlist.append(name)
+    return jsonify(jsonlist)
 
 
-@app.route("/json")
-def readwrite():
-    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
-    json_url = os.path.join(SITE_ROOT, 'static/maps/iJN746', 'iJN746.Central metabolism.json')
-    token = open(json_url)
-    stored_json = token.readlines()
-    token.close()
-    return stored_json[0]
+@app.route("/map")
+def map():
+    mapname = request.args.get('map')
+    json_url = os.path.join(SITE_ROOT, 'static/maps')
+    for root, dirs, files in os.walk(json_url):
+        for name in files:
+            if mapname == name:
+                json_url = os.path.join(SITE_ROOT, root, mapname)
+                token = open(json_url)
+                stored_json = token.readlines()
+                token.close()
+                return stored_json[0]
+
+
+@app.route("/model")
+def model():
+    jsonlist = []
+    modelname = request.args.get('model')
+    json_url = os.path.join(SITE_ROOT, 'static/maps/' + modelname)
+    for root, dirs, files in os.walk(json_url):
+        for name in files:
+            if name.endswith(".json"):
+                jsonlist.append(name)
+    return jsonify(jsonlist)
 
 
 if __name__ == '__main__':
