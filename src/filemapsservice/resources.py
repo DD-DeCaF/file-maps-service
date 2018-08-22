@@ -22,7 +22,7 @@ from flask import jsonify,abort, request
 from .app import api, app
 
 
-SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+SITE_ROOT = os.path.realpath(os.getcwd())
 
 
 class List(Resource):
@@ -42,6 +42,7 @@ class Map(Resource):
     """List all the maps availables"""
     @api.doc(params={'map': 'Full name of the map with extension'})
     def get(self):
+        print('MAP', request.args.get('map'))
         mapname = request.args.get('map')
         json_url = os.path.join(SITE_ROOT, 'static/maps')
         result = jsonindir(json_url, mapname)
@@ -57,7 +58,8 @@ class Model(Resource):
     @api.doc(params={'model': 'Full name of the model'})
     def get(self):
         modelname = request.args.get('model')
-        json_url = os.path.join(SITE_ROOT, 'static/maps/' + modelname)
+        print('MODELNAME', request.args.get('data'))
+        json_url = os.path.join(SITE_ROOT, 'static/maps/' + str(modelname))
         result = jsonindir(json_url)
         if not result:
             return abort(400,

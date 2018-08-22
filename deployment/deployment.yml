@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: filemapsservice-production
+  name: maps-production
 spec:
   selector:
     matchLabels:
-      app: filemapsservice
+      app: maps
       env: production
   replicas: 1
   template:
     metadata:
       labels:
-        app: filemapsservice
+        app: maps
         env: production
     spec:
       containers:
       - name: web
-        image: gcr.io/dd-decaf-cfbf6/filemapsservice:master
+        image: gcr.io/dd-decaf-cfbf6/maps:master
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
@@ -32,7 +32,7 @@ spec:
         - name: SENTRY_DSN
           valueFrom:
             secretKeyRef:
-              name: filemapsservice-production
+              name: maps-production
               key: SENTRY_DSN
         command: ["gunicorn", "-c", "gunicorn.py", "filemapsservice.wsgi:app"]
         resources:
@@ -46,22 +46,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: filemapsservice-staging
+  name: maps-staging
 spec:
   selector:
     matchLabels:
-      app: filemapsservice
+      app: maps
       env: staging
   replicas: 1
   template:
     metadata:
       labels:
-        app: filemapsservice
+        app: maps
         env: staging
     spec:
       containers:
       - name: web
-        image: gcr.io/dd-decaf-cfbf6/filemapsservice:devel
+        image: gcr.io/dd-decaf-cfbf6/maps:devel
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
@@ -77,7 +77,7 @@ spec:
         - name: SENTRY_DSN
           valueFrom:
             secretKeyRef:
-              name: filemapsservice-staging
+              name: maps-staging
               key: SENTRY_DSN
         command: ["gunicorn", "-c", "gunicorn.py", "filemapsservice.wsgi:app"]
         resources:
