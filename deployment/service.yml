@@ -1,0 +1,29 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: filemapsservice-production
+spec:
+  selector:
+    app: filemapsservice
+    env: production
+  ports:
+  - name: web
+    protocol: TCP
+    port: 80
+    targetPort: 8000
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: filemapsservice-staging
+spec:
+  selector:
+    app: filemapsservice
+    env: staging
+  ports:
+  - name: web
+    protocol: TCP
+    port: 80
+    targetPort: 8000
