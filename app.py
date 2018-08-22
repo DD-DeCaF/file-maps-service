@@ -20,40 +20,40 @@ app = Flask(__name__, static_url_path='/static')
 SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
 
 
-@app.route("/list")
+@app.route("/list", methods=['GET'])
 def list():
-    jsonlist = []
     json_url = os.path.join(SITE_ROOT, 'static/maps')
-    for root, dirs, files in os.walk(json_url):
-        for name in files:
-            if name.endswith(".json"):
-                jsonlist.append(name)
-    return jsonify(jsonlist)
+    return jsonindir(json_url)
 
 
-@app.route("/map")
+@app.route("/map", methods=['GET'])
 def map():
     mapname = request.args.get('map')
     json_url = os.path.join(SITE_ROOT, 'static/maps')
-    for root, dirs, files in os.walk(json_url):
-        for name in files:
-            if mapname == name:
-                json_url = os.path.join(SITE_ROOT, root, mapname)
-                token = open(json_url)
-                stored_json = token.readlines()
-                token.close()
-                return stored_json[0]
+    return jsonindir(json_url, mapname)
 
 
-@app.route("/model")
+@app.route("/model", methods=['GET'])
 def model():
-    jsonlist = []
     modelname = request.args.get('model')
     json_url = os.path.join(SITE_ROOT, 'static/maps/' + modelname)
-    for root, dirs, files in os.walk(json_url):
+    return jsonindir(json_url)
+
+
+def jsonindir(dir, mapname=None):
+    jsonlist = []
+    for root, dirs, files in os.walk(dir):
         for name in files:
-            if name.endswith(".json"):
-                jsonlist.append(name)
+            if mapname:
+                if mapname == name:
+                    json_url = os.path.join(SITE_ROOT, root, mapname)
+                    token = open(json_url)
+                    stored_json = token.readlines()
+                    token.close()
+                    return stored_json[0]
+            else:
+                if name.endswith(".json"):
+                    jsonlist.append(name)
     return jsonify(jsonlist)
 
 
