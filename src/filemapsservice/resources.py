@@ -16,8 +16,10 @@
 """Implement RESTful API endpoints using resources."""
 
 import os
+
+from flask import abort, jsonify, request
 from flask_restplus import Resource
-from flask import jsonify, abort, request
+
 from .app import api
 
 
