@@ -34,6 +34,11 @@ spec:
             secretKeyRef:
               name: maps-production
               key: SENTRY_DSN
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: maps-production
+              key: SECRET_KEY
         command: ["gunicorn", "-c", "gunicorn.py", "filemapsservice.wsgi:app"]
         resources:
           requests:
@@ -79,6 +84,11 @@ spec:
             secretKeyRef:
               name: maps-staging
               key: SENTRY_DSN
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: maps-staging
+              key: SECRET_KEY
         command: ["gunicorn", "-c", "gunicorn.py", "filemapsservice.wsgi:app"]
         resources:
           requests:
