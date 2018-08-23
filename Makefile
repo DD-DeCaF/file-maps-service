@@ -48,6 +48,10 @@ license:
 	./scripts/verify_license_headers.sh src/filemapsservice tests
 
 ## Check for known vulnerabilities in python dependencies.
+pipenv-check:
+	docker-compose run --rm web pipenv check --system
+	
+## Check for known vulnerabilities in python dependencies.
 safety:
 	docker-compose run --rm web safety check
 
