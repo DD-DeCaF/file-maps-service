@@ -12,28 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Test the resources.py."""
+
 
 def test_list(client):
+    """Test if the response of /list is 200."""
     response = client.get('/list')
     assert response.status_code == 200
 
 
 def test_model_success(client):
+    """Test if the response of /model is 200."""
     response = client.get('/model?model=iMM904')
     assert response.status_code == 200
 
 
 def test_map_success(client):
+    """Test if the response of /map is 200."""
     response = client.get('/map?map=e_coli_core.Core metabolism.json')
     assert response.status_code == 200
 
 
 def test_model_fail(client):
+    """Test if the response of /model is 400."""
     response = client.get('/model?model=ass')
     assert response.status_code == 400
 
 
-def test_map_success(client):
+def test_map_fail(client):
+    """Test if the response of /map is 400."""
     response = client.get('/map?map=e_coli_core.Core fail.json')
     assert response.status_code == 400
-

@@ -16,19 +16,20 @@
 """Implement RESTful API endpoints using resources."""
 
 import os
-from flask_restplus import Resource, fields
-from filemapsservice.app import app
-from flask import jsonify,abort, request
-from .app import api, app
+from flask_restplus import Resource
+from flask import jsonify, abort, request
+from .app import api
 
 
 SITE_ROOT = os.path.realpath(os.getcwd())
 
 
 class List(Resource):
-    """List all the maps availables"""
+    """List all the maps availables."""
+
     @api.doc(params={})
     def get(self):
+        """List all the maps availables."""
         json_url = os.path.join(SITE_ROOT, 'static/maps')
         result = jsonindir(json_url)
         if not result:
@@ -39,10 +40,11 @@ class List(Resource):
 
 
 class Map(Resource):
-    """List all the maps availables"""
+    """Return the map."""
+
     @api.doc(params={'map': 'Full name of the map with extension'})
     def get(self):
-        print('MAP', request.args.get('map'))
+        """Return the map."""
         mapname = request.args.get('map')
         json_url = os.path.join(SITE_ROOT, 'static/maps')
         result = jsonindir(json_url, mapname)
@@ -54,11 +56,12 @@ class Map(Resource):
 
 
 class Model(Resource):
-    """List all the maps availables"""
+    """List all the maps availables for a model."""
+
     @api.doc(params={'model': 'Full name of the model'})
     def get(self):
+        """List all the maps availables for a model."""
         modelname = request.args.get('model')
-        print('MODELNAME', request.args.get('data'))
         json_url = os.path.join(SITE_ROOT, 'static/maps/' + str(modelname))
         result = jsonindir(json_url)
         if not result:
@@ -69,6 +72,7 @@ class Model(Resource):
 
 
 def jsonindir(dir, mapname=None):
+    """Found all the .json files."""
     jsonlist = []
     for root, dirs, files in os.walk(dir):
         for name in files:
@@ -83,4 +87,3 @@ def jsonindir(dir, mapname=None):
                 if name.endswith(".json"):
                     jsonlist.append(name)
     return jsonlist
-
