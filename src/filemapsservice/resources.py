@@ -25,6 +25,7 @@ from .app import api
 
 SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
 
+
 class List(Resource):
     """List all the maps availables."""
 
