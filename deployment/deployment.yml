@@ -24,7 +24,7 @@ spec:
         - name: ENVIRONMENT
           value: production
         - name: SCRIPT_NAME
-          value: /filemapsservice
+          value: /maps
         - name: FLASK_APP
           value: src/filemapsservice/wsgi.py
         - name: ALLOWED_ORIGINS
@@ -74,7 +74,7 @@ spec:
         - name: ENVIRONMENT
           value: staging
         - name: SCRIPT_NAME
-          value: /filemapsservice
+          value: /maps
         - name: FLASK_APP
           value: src/filemapsservice/wsgi.py
         - name: ALLOWED_ORIGINS
