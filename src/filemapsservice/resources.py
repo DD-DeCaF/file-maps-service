@@ -23,8 +23,7 @@ from flask_restplus import Resource
 from .app import api
 
 
-SITE_ROOT = os.path.realpath(os.getcwd())
-
+SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
 
 class List(Resource):
     """List all the maps availables."""
