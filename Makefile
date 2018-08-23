@@ -56,10 +56,11 @@ test:
 	docker-compose run --rm -e ENVIRONMENT=testing web \
 		pytest --cov=src/filemapsservice
 
+
 ## Run the tests and report coverage (see https://docs.codecov.io/docs/testing-with-docker).
 shared := /tmp/coverage
 test-travis:
-	mkdir --parents "$(shared)"
+	mkdir -p parents "$(shared)"
 	docker-compose run --rm -e ENVIRONMENT=testing -v "$(shared):$(shared)" \
 		web pytest --cov-report "xml:$(shared)/coverage.xml" --cov-report term \
 		--cov=src/filemapsservice
