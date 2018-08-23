@@ -14,12 +14,12 @@ spec:
       paths:
       - path: /maps
         backend:
-          serviceName: filemapsservice-production
+          serviceName: maps-production
           servicePort: 80
   - host: api-staging.dd-decaf.eu
     http:
       paths:
       - path: /maps
         backend:
-          serviceName: filemapsservice-staging
+          serviceName: maps-staging
           servicePort: 80

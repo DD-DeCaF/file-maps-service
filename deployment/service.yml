@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: filemapsservice-production
+  name: maps-production
 spec:
   selector:
     app: filemapsservice
@@ -17,7 +17,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: filemapsservice-staging
+  name: maps-staging
 spec:
   selector:
     app: filemapsservice
