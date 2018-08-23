@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: gcr.io/dd-decaf-cfbf6/filemapsservice:${IMAGE_TAG:-latest}
+    image: gcr.io/dd-decaf-cfbf6/maps:${IMAGE_TAG:-latest}
     networks:
       default:
       DD-DeCaF:

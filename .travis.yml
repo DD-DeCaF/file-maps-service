@@ -9,7 +9,7 @@ services:
 
 env:
   global:
-    - IMAGE_REPO=gcr.io/dd-decaf-cfbf6/filemapsservice
+    - IMAGE_REPO=gcr.io/dd-decaf-cfbf6/maps
     - IMAGE_TAG=${TRAVIS_BRANCH}
 
 before_install:
@@ -42,7 +42,7 @@ notifications:
   email: false
   slack:
     rooms:
-      - <GENERATE SECURE TOKEN>
+      secure: fQySVU6NMlQq6va8e+/0EmFcMVv1na4GhfuEkh3ojcgdHJAIXHWiwB9d2iMr+ED6GMFzJ+pL/kbX1whKQFk4MpVrrdZWVgiH78Qrk//mW+kXNT9dMQZYWSiqgq7so1bn3UvsStOf0h9hVhWv/trK2C35lp4L8OJ5u4D4EnDsTVaaeIxTsiY3FXDAs+0crM+lq+wKrBaPJnRqHAY6DL2UusOabCjcFwFvqfz0iefM7nvK81mswqBHDvNJmtIsKJca1/oETbhmusNpjj6bB/LP2h+X3izIP1wlHq6FPiCYU21mdNJO9O8X3zehJsSqzC3sLHahRa2qB0wOUvzLKJcRfx0bS00g4qCmGhBcJDS59qjJG3rfXVM7sfhuYeINsubw9HKkq1Rg+ZCjRL9qo/Ve2uDl2CZsTBtmp77Bu4cz1GsAjq5587NwNz7ecqCOr8L6TmFh/ADRW4F/igPym+efqL93mAH0mnDCxyBeZ6f4Yg3tf0QkdsdGPTMBLpq8dHmcWLBEoGKMsODPbHYEFYZWocMVCzyVenLPrEwcNqVqwRbJose7IBPQTeOn3d6vxSPEAf/ULOCwwGYupKWCpXDxZS5jKo85SW1fTsw53So9rKSHikFxW3VdHBzzvhnP+Trl0/+fChne/axYwQe53BsmnGqTVSMir0L9g5QyDsQHrm8=
     on_success: change
     on_failure: change
     on_pull_requests: false
