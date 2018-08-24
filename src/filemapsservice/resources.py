@@ -14,7 +14,7 @@
 # limitations under the License.
 
 """Implement RESTful API endpoints using resources."""
-
+import json
 import os
 
 from flask import abort, jsonify, request
@@ -81,11 +81,12 @@ def jsonindir(dir, mapname=None):
             if mapname:
                 if mapname == name:
                     json_url = os.path.join(SITE_ROOT, root, mapname)
-                    token = open(json_url)
-                    stored_json = token.readlines()
-                    token.close()
-                    return stored_json[0]
+                    data = json.loads(open(json_url).read())
+                    return data
             else:
                 if name.endswith(".json"):
-                    jsonlist.append(name)
+                    json_url = os.path.join(SITE_ROOT, root, name)
+                    data = json.loads(open(json_url).read())
+                    jsonlist.append({"name": data[0].get('map_name'),
+                                     "map": name})
     return jsonlist
