@@ -78,7 +78,7 @@ spec:
         - name: FLASK_APP
           value: src/filemapsservice/wsgi.py
         - name: ALLOWED_ORIGINS
-          value: https://staging.dd-decaf.eu,http://localhost:4200
+          value: https://caffeine.dd-decaf.eu,http://localhost:4200
         - name: SENTRY_DSN
           valueFrom:
             secretKeyRef:
