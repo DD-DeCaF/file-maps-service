@@ -92,4 +92,4 @@ def jsonindir(dir, mapname=None):
                     map_name = data[0].get('map_name').split('.', 1)[-1]
                     jsonlist.append({"name": map_name,
                                      "map": name, "model": model})
-    return sorted(jsonlist, key=lambda x: x.get('map'))
+    return sorted(jsonlist, key=lambda x: x.get('name'))
