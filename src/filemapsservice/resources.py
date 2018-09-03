@@ -87,6 +87,9 @@ def jsonindir(dir, mapname=None):
                 if name.endswith(".json"):
                     json_url = os.path.join(SITE_ROOT, root, name)
                     data = json.loads(open(json_url).read())
-                    jsonlist.append({"name": data[0].get('map_name'),
-                                     "map": name})
-    return jsonlist
+                    model = root.replace(
+                        "/app/src/filemapsservice/static/maps/", "")
+                    map_name = data[0].get('map_name').split('.', 1)[-1]
+                    jsonlist.append({"name": map_name,
+                                     "map": name, "model": model})
+    return sorted(jsonlist, key=lambda x: x.get('name'))
