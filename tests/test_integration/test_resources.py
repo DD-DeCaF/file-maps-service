@@ -34,12 +34,13 @@ def test_map_success(client):
 
 
 def test_model_fail(client):
-    """Test if the response of /model is 400."""
+    """Test if the response of /model is empty list."""
     response = client.get('/model?model=ass')
-    assert response.status_code == 400
+    assert response.status_code == 200
+    assert response.json == []
 
 
 def test_map_fail(client):
-    """Test if the response of /map is 400."""
+    """Test if the response of /map is 404."""
     response = client.get('/map?map=e_coli_core.Core fail.json')
-    assert response.status_code == 400
+    assert response.status_code == 404
