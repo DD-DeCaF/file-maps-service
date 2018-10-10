@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Read and contain maps in memory"""
+"""Read and contain maps in memory."""
 
 import json
 import logging
@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 def init_maps():
+    """Read maps from disk into the `storage.MAPS` variable."""
     global MAPS
     logger.debug("Reading maps from disk")
     for map_filename in os.listdir('data/maps'):
