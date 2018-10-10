@@ -14,16 +14,12 @@
 # limitations under the License.
 
 """Implement RESTful API endpoints using resources."""
-import json
-import os
 
 from flask import abort, jsonify, request
 from flask_restplus import Resource
 
+from . import storage
 from .app import api
-
-
-SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
 
 
 class List(Resource):
@@ -32,13 +28,13 @@ class List(Resource):
     @api.doc(params={})
     def get(self):
         """List all the maps availables."""
-        json_url = os.path.join(SITE_ROOT, 'static/maps')
-        result = jsonindir(json_url)
-        if not result:
-            return abort(400,
-                         "No maps were found")
-        else:
-            return jsonify(result)
+        # Exclude `map_data` field
+        maps = [{
+            'map': map_['map'],
+            'model': map_['model'],
+            'name': map_['name'],
+        } for map_ in storage.MAPS]
+        return jsonify(maps)
 
 
 class Map(Resource):
@@ -47,14 +43,11 @@ class Map(Resource):
     @api.doc(params={'map': 'Full name of the map with extension'})
     def get(self):
         """Return the map."""
-        mapname = request.args.get('map')
-        json_url = os.path.join(SITE_ROOT, 'static/maps')
-        result = jsonindir(json_url, mapname)
-        if not result:
-            return abort(400,
-                         "No maps were found")
+        for map_ in storage.MAPS:
+            if map_['map'] == request.args['map']:
+                return jsonify(map_['map_data'])
         else:
-            return jsonify(result)
+            abort(404, f"Cannot find map {request.args['map']}")
 
 
 class Model(Resource):
@@ -63,33 +56,10 @@ class Model(Resource):
     @api.doc(params={'model': 'Full name of the model'})
     def get(self):
         """List all the maps availables for a model."""
-        modelname = request.args.get('model')
-        json_url = os.path.join(SITE_ROOT, 'static/maps/' + str(modelname))
-        result = jsonindir(json_url)
-        if not result:
-            return abort(400,
-                         "No models were found")
-        else:
-            return jsonify(result)
-
-
-def jsonindir(dir, mapname=None):
-    """Found all the .json files."""
-    jsonlist = []
-    for root, dirs, files in os.walk(dir):
-        for name in files:
-            if mapname:
-                if mapname == name:
-                    json_url = os.path.join(SITE_ROOT, root, mapname)
-                    data = json.loads(open(json_url).read())
-                    return data
-            else:
-                if name.endswith(".json"):
-                    json_url = os.path.join(SITE_ROOT, root, name)
-                    data = json.loads(open(json_url).read())
-                    model = root.replace(
-                        "/app/src/filemapsservice/static/maps/", "")
-                    map_name = data[0].get('map_name').split('.', 1)[-1]
-                    jsonlist.append({"name": map_name,
-                                     "map": name, "model": model})
-    return sorted(jsonlist, key=lambda x: x.get('name'))
+        # Filter by provided model, and exclude `map_data` field
+        maps = [{
+            'map': map_['map'],
+            'model': map_['model'],
+            'name': map_['name'],
+        } for map_ in storage.MAPS if map_['model'] == request.args['model']]
+        return jsonify(maps)

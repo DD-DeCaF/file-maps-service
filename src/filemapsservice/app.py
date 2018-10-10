@@ -24,6 +24,8 @@ from flask_restplus import Api
 from raven.contrib.flask import Sentry
 from werkzeug.contrib.fixers import ProxyFix
 
+from . import storage
+
 
 app = Flask(__name__)
 api = Api(
@@ -63,3 +65,6 @@ def init_app(application, interface):
     # We require this in order to serve the HTML version of the OpenAPI docs
     # via https.
     application.wsgi_app = ProxyFix(application.wsgi_app)
+
+    # Read maps from disk
+    storage.init_maps()
