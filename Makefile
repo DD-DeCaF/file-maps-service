@@ -31,21 +31,21 @@ style: flake8 isort license
 ## Run flake8.
 flake8:
 	docker-compose run --rm web \
-		flake8 src/filemapsservice tests
+		flake8 src/map_storage tests
 
 ## Check Python package import order.
 isort:
 	docker-compose run --rm web \
-		isort --check-only --recursive src/filemapsservice tests
+		isort --check-only --recursive src/map_storage tests
 
 ## Sort imports and write changes to files.
 isort-save:
 	docker-compose run --rm web \
-		isort --recursive src/filemapsservice tests
+		isort --recursive src/map_storage tests
 
 ## Verify source code license headers.
 license:
-	./scripts/verify_license_headers.sh src/filemapsservice tests
+	./scripts/verify_license_headers.sh src/map_storage tests
 
 ## Check for known vulnerabilities in python dependencies.
 safety:
@@ -54,7 +54,7 @@ safety:
 ## Run the tests.
 test:
 	docker-compose run --rm -e ENVIRONMENT=testing web \
-		pytest --cov=src/filemapsservice
+		pytest --cov=src/map_storage
 
 
 ## Run the tests and report coverage (see https://docs.codecov.io/docs/testing-with-docker).
@@ -63,7 +63,7 @@ test-travis:
 	mkdir -p parents "$(shared)"
 	docker-compose run --rm -e ENVIRONMENT=testing -v "$(shared):$(shared)" \
 		web pytest --cov-report "xml:$(shared)/coverage.xml" --cov-report term \
-		--cov=src/filemapsservice
+		--cov=src/map_storage
 	bash <(curl -s https://codecov.io/bash) -f "$(shared)/coverage.xml"
 
 ## Stop all services.

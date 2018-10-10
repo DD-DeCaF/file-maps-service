@@ -1,14 +1,14 @@
-# filemapsservice
+# map-storage
 
 ![master Branch](https://img.shields.io/badge/branch-master-blue.svg)
-[![master Build Status](https://travis-ci.org/DD-DeCaF/filemapsservice.svg?branch=master)](https://travis-ci.org/DD-DeCaF/filemapsservice)
-[![master Codecov](https://codecov.io/gh/DD-DeCaF/filemapsservice/branch/master/graph/badge.svg)](https://codecov.io/gh/DD-DeCaF/filemapsservice/branch/master)
-[![master Requirements Status](https://requires.io/github/DD-DeCaF/filemapsservice/requirements.svg?branch=master)](https://requires.io/github/DD-DeCaF/filemapsservice/requirements/?branch=master)
+[![master Build Status](https://travis-ci.org/DD-DeCaF/map-storage.svg?branch=master)](https://travis-ci.org/DD-DeCaF/map-storage)
+[![master Codecov](https://codecov.io/gh/DD-DeCaF/map-storage/branch/master/graph/badge.svg)](https://codecov.io/gh/DD-DeCaF/map-storage/branch/master)
+[![master Requirements Status](https://requires.io/github/DD-DeCaF/map-storage/requirements.svg?branch=master)](https://requires.io/github/DD-DeCaF/map-storage/requirements/?branch=master)
 
 ![devel Branch](https://img.shields.io/badge/branch-devel-blue.svg)
-[![devel Build Status](https://travis-ci.org/DD-DeCaF/filemapsservice.svg?branch=devel)](https://travis-ci.org/DD-DeCaF/filemapsservice)
-[![devel Codecov](https://codecov.io/gh/DD-DeCaF/filemapsservice/branch/devel/graph/badge.svg)](https://codecov.io/gh/DD-DeCaF/filemapsservice/branch/devel)
-[![devel Requirements Status](https://requires.io/github/DD-DeCaF/filemapsservice/requirements.svg?branch=devel)](https://requires.io/github/DD-DeCaF/filemapsservice/requirements/?branch=devel)
+[![devel Build Status](https://travis-ci.org/DD-DeCaF/map-storage.svg?branch=devel)](https://travis-ci.org/DD-DeCaF/map-storage)
+[![devel Codecov](https://codecov.io/gh/DD-DeCaF/map-storage/branch/devel/graph/badge.svg)](https://codecov.io/gh/DD-DeCaF/map-storage/branch/devel)
+[![devel Requirements Status](https://requires.io/github/DD-DeCaF/map-storage/requirements.svg?branch=devel)](https://requires.io/github/DD-DeCaF/map-storage/requirements/?branch=devel)
 
 ## Post-cookiecutter steps
 

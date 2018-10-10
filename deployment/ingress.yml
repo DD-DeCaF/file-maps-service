@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: maps
+  name: map-storage
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
@@ -16,12 +16,12 @@ spec:
       paths:
       - path: /maps
         backend:
-          serviceName: maps-production
+          serviceName: map-storage-production
           servicePort: 80
   - host: api-staging.dd-decaf.eu
     http:
       paths:
       - path: /maps
         backend:
-          serviceName: maps-staging
+          serviceName: map-storage-staging
           servicePort: 80

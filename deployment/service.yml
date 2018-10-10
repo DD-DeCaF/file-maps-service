@@ -1,10 +1,10 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: maps-production
+  name: map-storage-production
 spec:
   selector:
-    app: maps
+    app: map-storage
     env: production
   ports:
   - name: web
@@ -17,10 +17,10 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: maps-staging
+  name: map-storage-staging
 spec:
   selector:
-    app: maps
+    app: map-storage
     env: staging
   ports:
   - name: web

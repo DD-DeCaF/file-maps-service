@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: maps-production
+  name: map-storage-production
 spec:
   selector:
     matchLabels:
-      app: maps
+      app: map-storage
       env: production
   replicas: 1
   template:
     metadata:
       labels:
-        app: maps
+        app: map-storage
         env: production
     spec:
       containers:
@@ -26,20 +26,20 @@ spec:
         - name: SCRIPT_NAME
           value: /maps
         - name: FLASK_APP
-          value: src/filemapsservice/wsgi.py
+          value: src/map_storage/wsgi.py
         - name: ALLOWED_ORIGINS
           value: https://caffeine.dd-decaf.eu,http://localhost:4200
         - name: SENTRY_DSN
           valueFrom:
             secretKeyRef:
-              name: maps-production
+              name: map-storage-production
               key: SENTRY_DSN
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: maps-production
+              name: map-storage-production
               key: SECRET_KEY
-        command: ["gunicorn", "-c", "gunicorn.py", "filemapsservice.wsgi:app"]
+        command: ["gunicorn", "-c", "gunicorn.py", "map_storage.wsgi:app"]
         resources:
           requests:
             cpu: "10m"
@@ -51,17 +51,17 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: maps-staging
+  name: map-storage-staging
 spec:
   selector:
     matchLabels:
-      app: maps
+      app: map-storage
       env: staging
   replicas: 1
   template:
     metadata:
       labels:
-        app: maps
+        app: map-storage
         env: staging
     spec:
       containers:
@@ -76,20 +76,20 @@ spec:
         - name: SCRIPT_NAME
           value: /maps
         - name: FLASK_APP
-          value: src/filemapsservice/wsgi.py
+          value: src/map_storage/wsgi.py
         - name: ALLOWED_ORIGINS
           value: https://staging.dd-decaf.eu,http://localhost:4200
         - name: SENTRY_DSN
           valueFrom:
             secretKeyRef:
-              name: maps-staging
+              name: map-storage-staging
               key: SENTRY_DSN
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: maps-staging
+              name: map-storage-staging
               key: SECRET_KEY
-        command: ["gunicorn", "-c", "gunicorn.py", "filemapsservice.wsgi:app"]
+        command: ["gunicorn", "-c", "gunicorn.py", "map_storage.wsgi:app"]
         resources:
           requests:
             cpu: "5m"

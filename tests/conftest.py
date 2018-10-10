@@ -17,9 +17,9 @@
 
 import pytest
 
-from filemapsservice.app import api
-from filemapsservice.app import app as app_
-from filemapsservice.app import init_app
+from map_storage.app import api
+from map_storage.app import app as app_
+from map_storage.app import init_app
 
 
 @pytest.fixture(scope="session")

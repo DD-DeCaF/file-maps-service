@@ -29,7 +29,7 @@ from . import storage
 
 app = Flask(__name__)
 api = Api(
-    title="filemapsservice",
+    title="map-storage",
     version="0.1.0",
     description="A short description of the project",
 )
@@ -37,7 +37,7 @@ api = Api(
 
 def init_app(application, interface):
     """Initialize the main app with config information and routes."""
-    from filemapsservice.settings import current_config
+    from map_storage.settings import current_config
     application.config.from_object(current_config())
 
     # Configure logging

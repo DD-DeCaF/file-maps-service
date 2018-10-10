@@ -15,7 +15,7 @@
 
 """Prepare the application for use by the WSGI server (gunicorn)."""
 
-from filemapsservice.app import api, app, init_app
+from map_storage.app import api, app, init_app
 
 
 init_app(app, api)
