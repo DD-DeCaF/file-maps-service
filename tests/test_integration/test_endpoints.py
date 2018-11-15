@@ -21,6 +21,11 @@ def test_get_maps(client, session, map_fixtures):
     assert len(response.json) > 0
 
 
+def test_get_public_maps(client, session, map_fixtures):
+    response = client.get("/maps")
+    assert all([m['project_id'] is None for m in response.json])
+
+
 def test_get_maps_filtered(client, session, map_fixtures):
     response = client.get("/maps?model=iMM904")
     assert response.status_code == 200

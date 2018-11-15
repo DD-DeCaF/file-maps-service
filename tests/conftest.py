@@ -88,12 +88,14 @@ def map_fixtures(session):
     """Return test fixtures for the Map data model."""
     fixture1 = Map(
         id=1,
+        project_id=None,
         name="Map one",
         model_id=1,
         map={"foo": "bar"},
     )
     fixture2 = Map(
         id=2,
+        project_id=1,
         name="Map two",
         model_id=2,
         map={"foo": "bar"},
