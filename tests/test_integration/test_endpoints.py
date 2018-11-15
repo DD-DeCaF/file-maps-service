@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Integration tests for resource endpoints"""
+"""Integration tests for resource endpoints."""
 
 
 def test_get_maps(client, session, map_fixtures):
