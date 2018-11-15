@@ -21,12 +21,8 @@ class StrictSchema(Schema):
         strict = True
 
 
-class MapRequest(StrictSchema):
-    map = fields.String(
-        required=True,
-        description="Full name of the map with extension",
+class MapsRequest(StrictSchema):
+    model = fields.String(
+        required=False,
+        description="Full name of an optional model to filter by",
     )
-
-
-class ModelRequest(StrictSchema):
-    model = fields.String(required=True, description="Full name of the model")

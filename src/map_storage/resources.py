@@ -20,45 +20,34 @@ from flask_apispec import (
     FlaskApiSpec, MethodResource, doc, marshal_with, use_kwargs)
 
 from . import storage
-from .schemas import MapRequest, ModelRequest
+from .schemas import MapsRequest
 
 
 @doc(description="List all the maps available")
-class List(MethodResource):
-    def get(self):
+class Maps(MethodResource):
+    @use_kwargs(MapsRequest)
+    def get(self, model=None):
         # Exclude `map_data` field
         maps = [{
             'map': map_['map'],
             'model': map_['model'],
             'name': map_['name'],
         } for map_ in storage.MAPS]
+        if model:
+            maps = [m for m in maps if m['model'] == model]
         return jsonify(maps)
 
 
-@doc(description="Return the map")
+@doc(description="Map resource")
 class Map(MethodResource):
-    @use_kwargs(MapRequest)
     @marshal_with(None, code=200)
     @marshal_with(None, code=404)
-    def get(self, map):
+    def get(self, map_name):
         for map_ in storage.MAPS:
-            if map_['map'] == map:
+            if map_['map'] == map_name:
                 return jsonify(map_['map_data'])
         else:
-            abort(404, f"Cannot find map {map}")
-
-
-@doc(description="List all the maps available for a model")
-class Model(MethodResource):
-    @use_kwargs(ModelRequest)
-    def get(self, model):
-        # Filter by provided model, and exclude `map_data` field
-        maps = [{
-            'map': map_['map'],
-            'model': map_['model'],
-            'name': map_['name'],
-        } for map_ in storage.MAPS if map_['model'] == model]
-        return jsonify(maps)
+            abort(404, f"Cannot find map {map_name}")
 
 
 def init_app(app):
@@ -68,6 +57,5 @@ def init_app(app):
         docs.register(resource, endpoint=resource.__name__)
 
     docs = FlaskApiSpec(app)
-    register("/list", List)
-    register("/map", Map)
-    register("/model", Model)
+    register("/maps", Maps)
+    register("/maps/<string:map_name>", Map)
