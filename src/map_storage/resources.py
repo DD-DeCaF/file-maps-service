@@ -15,39 +15,40 @@
 
 """Implement RESTful API endpoints using resources."""
 
-from flask import abort, jsonify
+from flask import abort
 from flask_apispec import (
     FlaskApiSpec, MethodResource, doc, marshal_with, use_kwargs)
+from sqlalchemy.orm import load_only
+from sqlalchemy.orm.exc import NoResultFound
 
-from . import storage
-from .schemas import MapsRequest
+from .models import Map as MapModel
+from .schemas import MapResponse, MapsRequest, MapsResponse
 
 
 @doc(description="List all the maps available")
 class Maps(MethodResource):
     @use_kwargs(MapsRequest)
-    def get(self, model=None):
-        # Exclude `map_data` field
-        maps = [{
-            'map': map_['map'],
-            'model': map_['model'],
-            'name': map_['name'],
-        } for map_ in storage.MAPS]
-        if model:
-            maps = [m for m in maps if m['model'] == model]
-        return jsonify(maps)
+    @marshal_with(MapsResponse(many=True), code=200)
+    def get(self, model_id=None):
+        maps = MapModel.query.options(load_only(
+            MapModel.id,
+            MapModel.name,
+            MapModel.model_id,
+        ))
+        if model_id:
+            maps = maps.filter(MapModel.model_id == model_id)
+        return maps.all()
 
 
 @doc(description="Map resource")
 class Map(MethodResource):
-    @marshal_with(None, code=200)
+    @marshal_with(MapResponse, code=200)
     @marshal_with(None, code=404)
-    def get(self, map_name):
-        for map_ in storage.MAPS:
-            if map_['map'] == map_name:
-                return jsonify(map_['map_data'])
-        else:
-            abort(404, f"Cannot find map {map_name}")
+    def get(self, map_id):
+        try:
+            return MapModel.query.filter(MapModel.id == map_id).one()
+        except NoResultFound:
+            abort(404, f"Cannot find map with id {map_id}")
 
 
 def init_app(app):
@@ -58,4 +59,4 @@ def init_app(app):
 
     docs = FlaskApiSpec(app)
     register("/maps", Maps)
-    register("/maps/<string:map_name>", Map)
+    register("/maps/<int:map_id>", Map)

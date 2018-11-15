@@ -22,7 +22,20 @@ class StrictSchema(Schema):
 
 
 class MapsRequest(StrictSchema):
-    model = fields.String(
+    model_id = fields.Integer(
         required=False,
-        description="Full name of an optional model to filter by",
+        description="ID of an optional model to filter by",
     )
+
+
+class MapsResponse(Schema):
+    id = fields.Integer()
+    name = fields.String()
+    model_id = fields.Integer()
+
+
+class MapResponse(Schema):
+    id = fields.Integer()
+    name = fields.String()
+    model_id = fields.Integer()
+    map = fields.Raw()

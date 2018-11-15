@@ -25,7 +25,7 @@ from raven.contrib.flask import Sentry
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.exceptions import HTTPException
 
-from . import resources, storage
+from . import resources
 
 
 app = Flask(__name__)
@@ -78,6 +78,3 @@ def init_app(application):
     # We require this in order to serve the HTML version of the OpenAPI docs
     # via https.
     application.wsgi_app = ProxyFix(application.wsgi_app)
-
-    # Read maps from disk
-    storage.init_maps()
