@@ -26,7 +26,8 @@ from map_storage.models import db as db_
 def app():
     """Provide an initialized Flask for use in certain test cases."""
     init_app(app_)
-    return app_
+    with app_.app_context():
+        yield app_
 
 
 @pytest.fixture(scope="session")
