@@ -12,35 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Test the resources.py."""
+"""Integration tests for resource endpoints"""
 
 
-def test_list(client):
-    """Test if the response of /list is 200."""
-    response = client.get('/list')
+def test_get_maps(client):
+    response = client.get("/maps")
     assert response.status_code == 200
+    assert len(response.json) > 0
 
 
-def test_model_success(client):
-    """Test if the response of /model is 200."""
-    response = client.get('/model?model=iMM904')
+def test_get_maps_filtered(client):
+    response = client.get("/maps?model=iMM904")
     assert response.status_code == 200
+    assert len(response.json) > 0
 
 
-def test_map_success(client):
+def test_get_maps_filtered_not_found(client):
+    response = client.get("/maps?model=404")
+    assert response.status_code == 200
+    assert len(response.json) == 0
+
+
+def test_get_map(client):
     """Test if the response of /map is 200."""
-    response = client.get('/map?map=e_coli_core.Core metabolism.json')
+    response = client.get("/maps/e_coli_core.Core metabolism.json")
     assert response.status_code == 200
 
 
-def test_model_fail(client):
-    """Test if the response of /model is empty list."""
-    response = client.get('/model?model=ass')
-    assert response.status_code == 200
-    assert response.json == []
-
-
-def test_map_fail(client):
+def test_get_map_not_found(client):
     """Test if the response of /map is 404."""
-    response = client.get('/map?map=e_coli_core.Core fail.json')
+    response = client.get("/maps/404")
     assert response.status_code == 404
