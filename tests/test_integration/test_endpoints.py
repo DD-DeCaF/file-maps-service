@@ -15,31 +15,31 @@
 """Integration tests for resource endpoints"""
 
 
-def test_get_maps(client):
+def test_get_maps(client, session, map_fixtures):
     response = client.get("/maps")
     assert response.status_code == 200
     assert len(response.json) > 0
 
 
-def test_get_maps_filtered(client):
+def test_get_maps_filtered(client, session, map_fixtures):
     response = client.get("/maps?model=iMM904")
     assert response.status_code == 200
     assert len(response.json) > 0
 
 
-def test_get_maps_filtered_not_found(client):
-    response = client.get("/maps?model=404")
+def test_get_maps_filtered_not_found(client, session, map_fixtures):
+    response = client.get("/maps?model_id=404")
     assert response.status_code == 200
     assert len(response.json) == 0
 
 
-def test_get_map(client):
+def test_get_map(client, session, map_fixtures):
     """Test if the response of /map is 200."""
-    response = client.get("/maps/e_coli_core.Core metabolism.json")
+    response = client.get(f"/maps/{map_fixtures[0].id}")
     assert response.status_code == 200
 
 
-def test_get_map_not_found(client):
+def test_get_map_not_found(client, session, map_fixtures):
     """Test if the response of /map is 404."""
     response = client.get("/maps/404")
     assert response.status_code == 404
