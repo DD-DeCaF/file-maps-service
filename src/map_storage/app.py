@@ -25,7 +25,7 @@ from raven.contrib.flask import Sentry
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.exceptions import HTTPException
 
-from . import resources
+from . import jwt, resources
 
 
 app = Flask(__name__)
@@ -49,6 +49,9 @@ def init_app(application):
     from .models import db
     Migrate(application, db)
     db.init_app(application)
+
+    # Add JWT handling middleware
+    jwt.init_app(application)
 
     # Add routes and resources.
     resources.init_app(application)
