@@ -1,32 +1,12 @@
-# map-storage
+# Map storage
 
 ![master Branch](https://img.shields.io/badge/branch-master-blue.svg)
 [![master Build Status](https://travis-ci.org/DD-DeCaF/map-storage.svg?branch=master)](https://travis-ci.org/DD-DeCaF/map-storage)
 [![master Codecov](https://codecov.io/gh/DD-DeCaF/map-storage/branch/master/graph/badge.svg)](https://codecov.io/gh/DD-DeCaF/map-storage/branch/master)
-[![master Requirements Status](https://requires.io/github/DD-DeCaF/map-storage/requirements.svg?branch=master)](https://requires.io/github/DD-DeCaF/map-storage/requirements/?branch=master)
 
 ![devel Branch](https://img.shields.io/badge/branch-devel-blue.svg)
 [![devel Build Status](https://travis-ci.org/DD-DeCaF/map-storage.svg?branch=devel)](https://travis-ci.org/DD-DeCaF/map-storage)
 [![devel Codecov](https://codecov.io/gh/DD-DeCaF/map-storage/branch/devel/graph/badge.svg)](https://codecov.io/gh/DD-DeCaF/map-storage/branch/devel)
-[![devel Requirements Status](https://requires.io/github/DD-DeCaF/map-storage/requirements.svg?branch=devel)](https://requires.io/github/DD-DeCaF/map-storage/requirements/?branch=devel)
-
-## Post-cookiecutter steps
-
-Perform the following steps after creating a new service from the cookiecutter.
-
-* Create kubernetes secrets `maps-production` and `maps-staging`. Values needed:
-  * `SECRET_KEY` (see [How to generate good secret keys](http://flask.pocoo.org/docs/1.0/quickstart/#sessions))
-  * `SENTRY_DSN`
-* Review the cpu/memory limits in `deployment/deployment.yml` under `resources` ([see documentation](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/))
-* Create the following environment variables in Travis CI:
-  * `ENVIRONMENT`: `testing`
-  * `GCLOUD_EMAIL`: Google Cloud service account email for Travis CI
-  * `GCLOUD_KEY`: Google Cloud service account key for Travis CI (JSON file base64-encoded)
-* Generate secure token for Slack notifications in `.travis.yml`
-  * [Install the Travis CLI](https://github.com/travis-ci/travis.rb#installation)
-  * Run the following command in the project root directory:
-    `travis encrypt "account:token#channel" --add notifications.slack.rooms`
-* Remove this section from the README.
 
 ## Development
 
