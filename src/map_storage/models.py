@@ -16,6 +16,19 @@
 """ORM models."""
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects import postgresql
 
 
 db = SQLAlchemy()
+
+
+class Map(db.Model):
+    """Metabolic pathway map."""
+
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    name = db.Column(db.Text(), nullable=False)
+    model_id = db.Column(db.Integer, nullable=False)
+    map = db.Column(postgresql.JSONB, nullable=False)
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} {self.id}: {self.name}>"
