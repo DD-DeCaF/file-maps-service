@@ -2,3 +2,10 @@ Flask
 Flask-Cors
 flask-apispec
 raven[flask]
+
+# Database
+flask-migrate
+flask-sqlalchemy
+psycopg2-binary
+sqlalchemy
+alembic
