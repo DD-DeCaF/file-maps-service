@@ -20,6 +20,7 @@ import logging.config
 
 from flask import Flask, jsonify
 from flask_cors import CORS
+from flask_migrate import Migrate
 from raven.contrib.flask import Sentry
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.exceptions import HTTPException
@@ -43,6 +44,11 @@ def init_app(application):
         sentry = Sentry(dsn=application.config['SENTRY_DSN'], logging=True,
                         level=logging.ERROR)
         sentry.init_app(application)
+
+    # Initialize the database
+    from .models import db
+    Migrate(application, db)
+    db.init_app(application)
 
     # Add routes and resources.
     resources.init_app(application)

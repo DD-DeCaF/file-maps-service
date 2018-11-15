@@ -7,7 +7,7 @@ SHELL := /bin/bash
 #################################################################################
 
 ## Run all initialization targets.
-setup: network
+setup: network databases
 
 ## Create the docker bridge network if necessary.
 network:
@@ -17,6 +17,15 @@ network:
 ## Build local docker images.
 build:
 	docker-compose build
+
+## Create the necessary databases.
+databases:
+	docker-compose up -d postgres
+	./scripts/wait_for_postgres.sh
+	docker-compose exec postgres psql -U postgres -c "create database maps;"
+	docker-compose exec postgres psql -U postgres -c "create database maps_test;"
+	docker-compose run --rm web flask db upgrade
+	docker-compose stop
 
 ## Start all services in the background.
 start:

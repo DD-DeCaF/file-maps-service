@@ -50,6 +50,10 @@ class Default:
         self.SECRET_KEY = os.urandom(24)
         self.APISPEC_TITLE = "Memote Webservice"
         self.APISPEC_SWAGGER_UI_URL = "/"
+        self.SQLALCHEMY_DATABASE_URI = (
+            'postgresql://postgres:@postgres:5432/maps'
+        )
+        self.SQLALCHEMY_TRACK_MODIFICATIONS = False
         self.CORS_ORIGINS = os.environ['ALLOWED_ORIGINS'].split(',')
         self.SENTRY_DSN = os.environ.get('SENTRY_DSN')
         self.SENTRY_CONFIG = {
@@ -102,6 +106,9 @@ class Testing(Default):
         """Initialize the testing environment configuration."""
         super().__init__()
         self.TESTING = True
+        self.SQLALCHEMY_DATABASE_URI = (
+            'postgresql://postgres:@postgres:5432/maps_test'
+        )
 
 
 class Production(Default):
@@ -118,3 +125,9 @@ class Production(Default):
         self.DEBUG = False
         self.SECRET_KEY = os.environ['SECRET_KEY']
         self.LOGGING['root']['level'] = 'INFO'
+        self.SQLALCHEMY_DATABASE_URI = (
+            f"postgresql://{os.environ['POSTGRES_USERNAME']}:"
+            f"{os.environ['POSTGRES_PASSWORD']}@{os.environ['POSTGRES_HOST']}:"
+            f"{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_NAME']}"
+            f"?connect_timeout=10"
+        )
