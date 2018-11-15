@@ -1,56 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: map-storage-production
-spec:
-  selector:
-    matchLabels:
-      app: map-storage
-      env: production
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: map-storage
-        env: production
-    spec:
-      containers:
-      - name: web
-        image: gcr.io/dd-decaf-cfbf6/maps:master
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8000
-        env:
-        - name: ENVIRONMENT
-          value: production
-        - name: SCRIPT_NAME
-          value: /maps
-        - name: FLASK_APP
-          value: src/map_storage/wsgi.py
-        - name: ALLOWED_ORIGINS
-          value: https://caffeine.dd-decaf.eu,http://localhost:4200
-        - name: SENTRY_DSN
-          valueFrom:
-            secretKeyRef:
-              name: map-storage-production
-              key: SENTRY_DSN
-        - name: SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: map-storage-production
-              key: SECRET_KEY
-        command: ["gunicorn", "-c", "gunicorn.py", "map_storage.wsgi:app"]
-        resources:
-          requests:
-            cpu: "10m"
-          limits:
-            cpu: "100m"
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: map-storage-staging
 spec:
   selector:
