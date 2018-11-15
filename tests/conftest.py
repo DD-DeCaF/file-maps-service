@@ -19,6 +19,7 @@ import pytest
 
 from map_storage.app import app as app_
 from map_storage.app import init_app
+from map_storage.models import Map
 from map_storage.models import db as db_
 
 
@@ -80,3 +81,23 @@ def session(reset_tables, connection):
     db_.session.close()
     transaction.rollback()
     db_.session = flask_sqlalchemy_session
+
+
+@pytest.fixture(scope="function")
+def map_fixtures(session):
+    """Return test fixtures for the Map data model."""
+    fixture1 = Map(
+        id=1,
+        name="Map one",
+        model_id=1,
+        map={"foo": "bar"},
+    )
+    fixture2 = Map(
+        id=2,
+        name="Map two",
+        model_id=2,
+        map={"foo": "bar"},
+    )
+    session.add(fixture1)
+    session.add(fixture2)
+    return fixture1, fixture2
