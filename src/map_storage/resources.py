@@ -15,7 +15,7 @@
 
 """Implement RESTful API endpoints using resources."""
 
-from flask import abort
+from flask import abort, g
 from flask_apispec import (
     FlaskApiSpec, MethodResource, doc, marshal_with, use_kwargs)
 from sqlalchemy.orm import load_only
@@ -32,9 +32,13 @@ class Maps(MethodResource):
     def get(self, model_id=None):
         maps = MapModel.query.options(load_only(
             MapModel.id,
+            MapModel.project_id,
             MapModel.name,
             MapModel.model_id,
-        ))
+        )).filter(
+            MapModel.project_id.in_(g.jwt_claims['prj']) |
+            MapModel.project_id.is_(None)
+        )
         if model_id:
             maps = maps.filter(MapModel.model_id == model_id)
         return maps.all()
@@ -46,7 +50,12 @@ class Map(MethodResource):
     @marshal_with(None, code=404)
     def get(self, map_id):
         try:
-            return MapModel.query.filter(MapModel.id == map_id).one()
+            return MapModel.query.filter(
+                MapModel.id == map_id
+            ).filter(
+                MapModel.project_id.in_(g.jwt_claims['prj']) |
+                MapModel.project_id.is_(None)
+            ).one()
         except NoResultFound:
             abort(404, f"Cannot find map with id {map_id}")
 

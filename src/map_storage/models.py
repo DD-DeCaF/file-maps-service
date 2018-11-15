@@ -26,6 +26,7 @@ class Map(db.Model):
     """Metabolic pathway map."""
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
+    project_id = db.Column(db.Integer, nullable=True, index=True)
     name = db.Column(db.Text(), nullable=False)
     model_id = db.Column(db.Integer, nullable=False)
     map = db.Column(postgresql.JSONB, nullable=False)

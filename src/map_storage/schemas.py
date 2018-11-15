@@ -30,12 +30,14 @@ class MapsRequest(StrictSchema):
 
 class MapsResponse(Schema):
     id = fields.Integer()
+    project_id = fields.Integer()
     name = fields.String()
     model_id = fields.Integer()
 
 
 class MapResponse(Schema):
     id = fields.Integer()
+    project_id = fields.Integer()
     name = fields.String()
     model_id = fields.Integer()
     map = fields.Raw()

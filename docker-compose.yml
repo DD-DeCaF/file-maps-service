@@ -22,6 +22,7 @@ services:
       - SCRIPT_NAME=${SCRIPT_NAME}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:4200}
       - SENTRY_DSN=${SENTRY_DSN}
+      - IAM_API=${IAM_API:-https://api-staging.dd-decaf.eu/iam}
     command: gunicorn -c gunicorn.py map_storage.wsgi:app
 
   postgres:
