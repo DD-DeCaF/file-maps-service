@@ -13,23 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Provide session level fixtures."""
-
-import pytest
-
-from map_storage.app import app as app_
-from map_storage.app import init_app
+from marshmallow import Schema, fields
 
 
-@pytest.fixture(scope="session")
-def app():
-    """Provide an initialized Flask for use in certain test cases."""
-    init_app(app_)
-    return app_
+class StrictSchema(Schema):
+    class Meta:
+        strict = True
 
 
-@pytest.fixture(scope="session")
-def client(app):
-    """Provide a Flask test client to be used by almost all test cases."""
-    with app.test_client() as client:
-        yield client
+class MapRequest(StrictSchema):
+    map = fields.String(
+        required=True,
+        description="Full name of the map with extension",
+    )
+
+
+class ModelRequest(StrictSchema):
+    model = fields.String(required=True, description="Full name of the model")

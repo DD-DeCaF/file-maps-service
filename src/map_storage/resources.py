@@ -15,19 +15,17 @@
 
 """Implement RESTful API endpoints using resources."""
 
-from flask import abort, jsonify, request
-from flask_restplus import Resource
+from flask import abort, jsonify
+from flask_apispec import (
+    FlaskApiSpec, MethodResource, doc, marshal_with, use_kwargs)
 
 from . import storage
-from .app import api
+from .schemas import MapRequest, ModelRequest
 
 
-class List(Resource):
-    """List all the maps availables."""
-
-    @api.doc(params={})
+@doc(description="List all the maps available")
+class List(MethodResource):
     def get(self):
-        """List all the maps availables."""
         # Exclude `map_data` field
         maps = [{
             'map': map_['map'],
@@ -37,29 +35,39 @@ class List(Resource):
         return jsonify(maps)
 
 
-class Map(Resource):
-    """Return the map."""
-
-    @api.doc(params={'map': 'Full name of the map with extension'})
-    def get(self):
-        """Return the map."""
+@doc(description="Return the map")
+class Map(MethodResource):
+    @use_kwargs(MapRequest)
+    @marshal_with(None, code=200)
+    @marshal_with(None, code=404)
+    def get(self, map):
         for map_ in storage.MAPS:
-            if map_['map'] == request.args['map']:
+            if map_['map'] == map:
                 return jsonify(map_['map_data'])
         else:
-            abort(404, f"Cannot find map {request.args['map']}")
+            abort(404, f"Cannot find map {map}")
 
 
-class Model(Resource):
-    """List all the maps availables for a model."""
-
-    @api.doc(params={'model': 'Full name of the model'})
-    def get(self):
-        """List all the maps availables for a model."""
+@doc(description="List all the maps available for a model")
+class Model(MethodResource):
+    @use_kwargs(ModelRequest)
+    def get(self, model):
         # Filter by provided model, and exclude `map_data` field
         maps = [{
             'map': map_['map'],
             'model': map_['model'],
             'name': map_['name'],
-        } for map_ in storage.MAPS if map_['model'] == request.args['model']]
+        } for map_ in storage.MAPS if map_['model'] == model]
         return jsonify(maps)
+
+
+def init_app(app):
+    """Register API resources on the provided Flask application."""
+    def register(path, resource):
+        app.add_url_rule(path, view_func=resource.as_view(resource.__name__))
+        docs.register(resource, endpoint=resource.__name__)
+
+    docs = FlaskApiSpec(app)
+    register("/list", List)
+    register("/map", Map)
+    register("/model", Model)
