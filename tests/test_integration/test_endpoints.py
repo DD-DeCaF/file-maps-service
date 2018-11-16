@@ -48,3 +48,10 @@ def test_get_map_not_found(client, session, map_fixtures):
     """Test if the response of /map is 404."""
     response = client.get("/maps/404")
     assert response.status_code == 404
+
+
+def test_delete_map(client, session, map_fixtures, tokens):
+    response = client.delete(f"/maps/{map_fixtures[1].id}", headers={
+        'Authorization': f"Bearer {tokens['admin']}",
+    })
+    assert response.status_code == 204
