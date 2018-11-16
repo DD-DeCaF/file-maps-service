@@ -15,20 +15,22 @@
 
 """Implement RESTful API endpoints using resources."""
 
-from flask import abort, g
+from flask import abort, g, make_response
 from flask_apispec import (
     FlaskApiSpec, MethodResource, doc, marshal_with, use_kwargs)
 from sqlalchemy.orm import load_only
 from sqlalchemy.orm.exc import NoResultFound
 
+from .jwt import jwt_require_claim, jwt_required
 from .models import Map as MapModel
-from .schemas import MapResponse, MapsRequest
+from .models import db
+from .schemas import Map, MapListFilter
 
 
 @doc(description="List all the maps available")
 class Maps(MethodResource):
-    @use_kwargs(MapsRequest)
-    @marshal_with(MapResponse(many=True, exclude=('map',)), code=200)
+    @use_kwargs(MapListFilter)
+    @marshal_with(Map(many=True, exclude=('map',)), code=200)
     def get(self, model_id=None):
         maps = MapModel.query.options(load_only(
             MapModel.id,
@@ -43,10 +45,26 @@ class Maps(MethodResource):
             maps = maps.filter(MapModel.model_id == model_id)
         return maps.all()
 
+    @use_kwargs(Map(exclude=('id,')))
+    @marshal_with(None, code=201)
+    @marshal_with(None, code=401)
+    @marshal_with(None, code=403)
+    @jwt_required
+    def post(self, project_id, name, model_id, map):
+        jwt_require_claim(project_id, 'write')
+        db.session.add(MapModel(
+            project_id=project_id,
+            name=name,
+            model_id=model_id,
+            map=map,
+        ))
+        db.session.commit()
+        return make_response('', 201)
+
 
 @doc(description="Map resource")
 class Map(MethodResource):
-    @marshal_with(MapResponse, code=200)
+    @marshal_with(Map, code=200)
     @marshal_with(None, code=404)
     def get(self, map_id):
         try:

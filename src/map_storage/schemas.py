@@ -21,16 +21,16 @@ class StrictSchema(Schema):
         strict = True
 
 
-class MapsRequest(StrictSchema):
+class MapListFilter(StrictSchema):
     model_id = fields.Integer(
         required=False,
         description="ID of an optional model to filter by",
     )
 
 
-class MapResponse(Schema):
-    id = fields.Integer()
-    project_id = fields.Integer()
-    name = fields.String()
-    model_id = fields.Integer()
-    map = fields.Raw()
+class Map(StrictSchema):
+    id = fields.Integer(strict=True)
+    project_id = fields.Integer(strict=True)
+    name = fields.String(strict=True)
+    model_id = fields.Integer(strict=True)
+    map = fields.Raw(strict=True)
