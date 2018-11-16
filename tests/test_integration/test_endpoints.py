@@ -50,6 +50,22 @@ def test_get_map_not_found(client, session, map_fixtures):
     assert response.status_code == 404
 
 
+def test_post_map(client, session, tokens):
+    response = client.post(
+        f"/maps",
+        json={
+            'project_id': 1,
+            'name': "Testmap",
+            'model_id': 1,
+            'map': {"foo": "bar"},
+        },
+        headers={
+            'Authorization': f"Bearer {tokens['write']}",
+        },
+    )
+    assert response.status_code == 201
+
+
 def test_delete_map(client, session, map_fixtures, tokens):
     response = client.delete(f"/maps/{map_fixtures[1].id}", headers={
         'Authorization': f"Bearer {tokens['admin']}",
