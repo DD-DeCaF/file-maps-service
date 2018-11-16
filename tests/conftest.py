@@ -16,6 +16,7 @@
 """Provide session level fixtures."""
 
 import pytest
+from jose import jwt
 
 from map_storage.app import app as app_
 from map_storage.app import init_app
@@ -103,3 +104,25 @@ def map_fixtures(session):
     session.add(fixture1)
     session.add(fixture2)
     return fixture1, fixture2
+
+
+@pytest.fixture(scope="session")
+def tokens(app):
+    """Provide read, write and admin JWT claims to project 1."""
+    return {
+        'read': jwt.encode(
+            {'prj': {1: 'read'}},
+            app.config['JWT_PRIVATE_KEY'],
+            'RS512',
+        ),
+        'write': jwt.encode(
+            {'prj': {1: 'write'}},
+            app.config['JWT_PRIVATE_KEY'],
+            'RS512',
+        ),
+        'admin': jwt.encode(
+            {'prj': {1: 'admin'}},
+            app.config['JWT_PRIVATE_KEY'],
+            'RS512',
+        ),
+    }
