@@ -77,6 +77,27 @@ class Map(MethodResource):
         except NoResultFound:
             abort(404, f"Cannot find map with id {map_id}")
 
+    @marshal_with(None, code=204)
+    @marshal_with(None, code=401)
+    @marshal_with(None, code=403)
+    @marshal_with(None, code=404)
+    @jwt_required
+    def delete(self, map_id):
+        try:
+            map = MapModel.query.filter(
+                MapModel.id == map_id
+            ).filter(
+                MapModel.project_id.in_(g.jwt_claims['prj']) |
+                MapModel.project_id.is_(None)
+            ).one()
+        except NoResultFound:
+            abort(404, f"Cannot find map with id {map_id}")
+        else:
+            jwt_require_claim(map.project_id, 'admin')
+            db.session.delete(map)
+            db.session.commit()
+            return make_response('', 204)
+
 
 def init_app(app):
     """Register API resources on the provided Flask application."""
