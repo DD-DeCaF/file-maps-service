@@ -29,8 +29,8 @@ class MapListFilter(StrictSchema):
 
 
 class Map(StrictSchema):
-    id = fields.Integer(strict=True)
-    project_id = fields.Integer(strict=True)
-    name = fields.String(strict=True)
-    model_id = fields.Integer(strict=True)
-    map = fields.Raw(strict=True)
+    id = fields.Integer(required=True)
+    project_id = fields.Integer(required=True)
+    name = fields.String(required=True)
+    model_id = fields.Integer(required=True)
+    map = fields.Raw(required=True)
