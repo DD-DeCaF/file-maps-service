@@ -22,13 +22,13 @@ from sqlalchemy.orm import load_only
 from sqlalchemy.orm.exc import NoResultFound
 
 from .models import Map as MapModel
-from .schemas import MapResponse, MapsRequest, MapsResponse
+from .schemas import MapResponse, MapsRequest
 
 
 @doc(description="List all the maps available")
 class Maps(MethodResource):
     @use_kwargs(MapsRequest)
-    @marshal_with(MapsResponse(many=True), code=200)
+    @marshal_with(MapResponse(many=True, exclude=('map',)), code=200)
     def get(self, model_id=None):
         maps = MapModel.query.options(load_only(
             MapModel.id,
