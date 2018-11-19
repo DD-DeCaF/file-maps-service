@@ -38,7 +38,7 @@ class Maps(MethodResource):
             MapModel.name,
             MapModel.model_id,
         )).filter(
-            MapModel.project_id.in_(g.jwt_claims['prj']) |
+            MapModel.project_id.in_(g.jwt_claims['prj']) |  # noqa: W504
             MapModel.project_id.is_(None)
         )
         if model_id:
@@ -71,7 +71,7 @@ class Map(MethodResource):
             return MapModel.query.filter(
                 MapModel.id == map_id
             ).filter(
-                MapModel.project_id.in_(g.jwt_claims['prj']) |
+                MapModel.project_id.in_(g.jwt_claims['prj']) |  # noqa: W504
                 MapModel.project_id.is_(None)
             ).one()
         except NoResultFound:
@@ -87,7 +87,7 @@ class Map(MethodResource):
             map = MapModel.query.filter(
                 MapModel.id == map_id
             ).filter(
-                MapModel.project_id.in_(g.jwt_claims['prj']) |
+                MapModel.project_id.in_(g.jwt_claims['prj']) |  # noqa: W504
                 MapModel.project_id.is_(None)
             ).one()
         except NoResultFound:
