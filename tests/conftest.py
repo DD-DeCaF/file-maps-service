@@ -103,6 +103,7 @@ def map_fixtures(session):
     )
     session.add(fixture1)
     session.add(fixture2)
+    session.commit()
     return fixture1, fixture2
 
 
