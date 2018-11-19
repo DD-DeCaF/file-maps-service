@@ -77,6 +77,29 @@ class Map(MethodResource):
         except NoResultFound:
             abort(404, f"Cannot find map with id {map_id}")
 
+    @use_kwargs(Map(exclude=('id',), partial=True))
+    @marshal_with(None, code=200)
+    @marshal_with(None, code=401)
+    @marshal_with(None, code=403)
+    @marshal_with(None, code=404)
+    def put(self, map_id, **payload):
+        try:
+            map = MapModel.query.filter(
+                MapModel.id == map_id
+            ).filter(
+                MapModel.project_id.in_(g.jwt_claims['prj']) |  # noqa: W504
+                MapModel.project_id.is_(None)
+            ).one()
+        except NoResultFound:
+            abort(404, f"Cannot find map with id {map_id}")
+        else:
+            jwt_require_claim(map.project_id, 'write')
+            for key, value in payload.items():
+                setattr(map, key, value)
+            db.session.commit()
+            return make_response('', 204)
+
+
     @marshal_with(None, code=204)
     @marshal_with(None, code=401)
     @marshal_with(None, code=403)
