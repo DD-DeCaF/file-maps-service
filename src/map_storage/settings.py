@@ -134,6 +134,6 @@ class Production(Default):
         self.SQLALCHEMY_DATABASE_URI = (
             f"postgresql://{os.environ['POSTGRES_USERNAME']}:"
             f"{os.environ['POSTGRES_PASS']}@{os.environ['POSTGRES_HOST']}:"
-            f"{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_NAME']}"
+            f"{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB_NAME']}"
             f"?connect_timeout=10"
         )
