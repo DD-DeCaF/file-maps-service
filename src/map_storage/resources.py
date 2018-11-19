@@ -99,7 +99,6 @@ class Map(MethodResource):
             db.session.commit()
             return make_response('', 204)
 
-
     @marshal_with(None, code=204)
     @marshal_with(None, code=401)
     @marshal_with(None, code=403)
