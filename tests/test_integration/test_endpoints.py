@@ -14,6 +14,8 @@
 
 """Integration tests for resource endpoints."""
 
+from map_storage.models import Map
+
 
 def test_get_maps(client, session, map_fixtures):
     response = client.get("/maps")
@@ -64,6 +66,20 @@ def test_post_map(client, session, tokens):
         },
     )
     assert response.status_code == 201
+
+
+def test_put_map(client, session, map_fixtures, tokens):
+    response = client.put(
+        f"/maps/{map_fixtures[1].id}",
+        json={'id': 4, 'name': "Changed name"},
+        headers={
+            'Authorization': f"Bearer {tokens['write']}",
+        },
+    )
+    assert response.status_code == 204
+
+    map = Map.query.filter(Map.id == map_fixtures[1].id).one()
+    assert map.name == "Changed name"
 
 
 def test_delete_map(client, session, map_fixtures, tokens):
