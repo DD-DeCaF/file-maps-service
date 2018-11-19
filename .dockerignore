@@ -3,6 +3,7 @@
 !scripts/
 !tests/
 !data/
+!migrations/
 !gunicorn.py
 !setup.cfg
 !*requirements.in
