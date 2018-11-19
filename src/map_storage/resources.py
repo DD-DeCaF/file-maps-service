@@ -45,7 +45,7 @@ class Maps(MethodResource):
             maps = maps.filter(MapModel.model_id == model_id)
         return maps.all()
 
-    @use_kwargs(Map(exclude=('id,')))
+    @use_kwargs(Map(exclude=('id',)))
     @marshal_with(None, code=201)
     @marshal_with(None, code=401)
     @marshal_with(None, code=403)
