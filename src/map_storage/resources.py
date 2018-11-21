@@ -45,7 +45,7 @@ class Maps(MethodResource):
             maps = maps.filter(MapModel.model_id == model_id)
         return maps.all()
 
-    @use_kwargs(Map(exclude=('id',)))
+    @use_kwargs(Map)
     @marshal_with(None, code=201)
     @marshal_with(None, code=401)
     @marshal_with(None, code=403)
@@ -77,7 +77,7 @@ class Map(MethodResource):
         except NoResultFound:
             abort(404, f"Cannot find map with id {map_id}")
 
-    @use_kwargs(Map(exclude=('id',), partial=True))
+    @use_kwargs(Map(partial=True))
     @marshal_with(None, code=200)
     @marshal_with(None, code=401)
     @marshal_with(None, code=403)
