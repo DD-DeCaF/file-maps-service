@@ -56,7 +56,7 @@ spec:
               name: map-storage-staging
               key: POSTGRES_PASS
         - name: IAM_API
-          value: http://iam-staging
+          value: http://iam-staging/iam
         command: ["/bin/sh", "-c"]
         args: ["flask db upgrade && gunicorn -c gunicorn.py map_storage.wsgi:app"]
         resources:
