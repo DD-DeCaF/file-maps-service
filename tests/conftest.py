@@ -15,6 +15,8 @@
 
 """Provide session level fixtures."""
 
+import json
+
 import pytest
 from jose import jwt
 
@@ -105,6 +107,13 @@ def map_fixtures(session):
     session.add(fixture2)
     session.commit()
     return fixture1, fixture2
+
+
+@pytest.fixture(scope="session")
+def ecoli_map():
+    """Return a dict of the e. coli core metabolism map."""
+    with open("tests/data/e_coli_core.Core metabolism.json") as file_:
+        return json.load(file_)
 
 
 @pytest.fixture(scope="session")
