@@ -13,7 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
+
 from marshmallow import Schema, fields
+from marshmallow.exceptions import ValidationError
+
+from jsonschema import ValidationError as JSONSchemaValidationError
+from jsonschema import validate
 
 
 class StrictSchema(Schema):
@@ -28,9 +34,31 @@ class MapListFilter(StrictSchema):
     )
 
 
+class EscherMap(fields.Field):
+    """
+    Custom field for the escher map.
+
+    The field is not changed on deserialization (it remains a dict structure),
+    but it's validated against the escher json schema.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        with open("jsonschema/1-0-0") as file_:
+            self._escher_schema = json.load(file_)
+
+    def _deserialize(self, value, attr, data):
+        try:
+            validate(value, self._escher_schema)
+        except JSONSchemaValidationError as error:
+            raise ValidationError(error.message)
+        else:
+            return value
+
+
 class Map(StrictSchema):
     id = fields.Integer(required=True)
     project_id = fields.Integer(required=True)
     name = fields.String(required=True)
     model_id = fields.Integer(required=True)
-    map = fields.Raw(required=True)
+    map = EscherMap(required=True)
