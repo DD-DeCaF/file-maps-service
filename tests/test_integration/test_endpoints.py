@@ -52,14 +52,14 @@ def test_get_map_not_found(client, session, map_fixtures):
     assert response.status_code == 404
 
 
-def test_post_map(client, session, tokens):
+def test_post_map(client, session, tokens, ecoli_map):
     response = client.post(
         f"/maps",
         json={
             'project_id': 1,
             'name': "Testmap",
             'model_id': 1,
-            'map': {"foo": "bar"},
+            'map': ecoli_map,
         },
         headers={
             'Authorization': f"Bearer {tokens['write']}",
