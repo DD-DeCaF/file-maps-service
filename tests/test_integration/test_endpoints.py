@@ -68,6 +68,20 @@ def test_post_map(client, session, tokens, ecoli_map):
     assert response.status_code == 201
 
 
+def test_post_invalid_map(client, session, tokens):
+    response = client.post(
+        f"/maps",
+        json={
+            'project_id': 1,
+            'name': "Testmap",
+            'model_id': 1,
+            'map': {"foo": "bar"},
+        },
+        headers={'Authorization': f"Bearer {tokens['write']}"},
+    )
+    assert response.status_code == 422
+
+
 def test_put_map(client, session, map_fixtures, tokens):
     response = client.put(
         f"/maps/{map_fixtures[1].id}",
