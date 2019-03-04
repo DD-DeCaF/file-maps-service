@@ -15,8 +15,7 @@
 
 import json
 
-from marshmallow import Schema, fields
-from marshmallow.exceptions import ValidationError
+from marshmallow import Schema, fields, ValidationError
 
 from jsonschema import ValidationError as JSONSchemaValidationError
 from jsonschema import validate
