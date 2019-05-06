@@ -46,20 +46,21 @@ class Maps(MethodResource):
         return maps.all()
 
     @use_kwargs(Map(exclude=('id',)))
-    @marshal_with(None, code=201)
+    @marshal_with(Map(only=('id',)), code=201)
     @marshal_with(None, code=401)
     @marshal_with(None, code=403)
     @jwt_required
     def post(self, project_id, name, model_id, map):
         jwt_require_claim(project_id, 'write')
-        db.session.add(MapModel(
+        map = MapModel(
             project_id=project_id,
             name=name,
             model_id=model_id,
             map=map,
-        ))
+        )
+        db.session.add(map)
         db.session.commit()
-        return make_response('', 201)
+        return {'id' : map.id}, 201
 
 
 @doc(description="Map resource")
