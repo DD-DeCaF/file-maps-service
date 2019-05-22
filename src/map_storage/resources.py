@@ -60,7 +60,7 @@ class Maps(MethodResource):
         )
         db.session.add(map)
         db.session.commit()
-        return {'id': map.id}, 201
+        return map, 201
 
 
 @doc(description="Map resource")
