@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: map-storage-staging
+spec:
+  selector:
+    matchLabels:
+      app: map-storage
+      env: staging
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: map-storage
+        env: staging
+    spec:
+      initContainers:
+      - name: migrate
+        image: gcr.io/dd-decaf-cfbf6/maps:devel
+        imagePullPolicy: Always
+        env:
+        - name: ENVIRONMENT
+          value: staging
+        - name: SCRIPT_NAME
+          value: /maps
+        - name: FLASK_APP
+          value: src/map_storage/wsgi.py
+        - name: ALLOWED_ORIGINS
+          value: https://caffeine.dd-decaf.eu,https://staging.dd-decaf.eu,http://localhost:4200
+        - name: SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: map-storage-staging
+              key: SENTRY_DSN
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: map-storage-staging
+              key: SECRET_KEY
+        - name: POSTGRES_HOST
+          value: cloudsql-proxy
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_DB_NAME
+          value: maps_staging
+        - name: POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: map-storage-staging
+              key: POSTGRES_USERNAME
+        - name: POSTGRES_PASS
+          valueFrom:
+            secretKeyRef:
+              name: map-storage-staging
+              key: POSTGRES_PASS
+        - name: IAM_API
+          value: http://iam-staging/iam
+        command: ["flask", "db", "upgrade"]
+      containers:
+      - name: web
+        image: gcr.io/dd-decaf-cfbf6/maps:devel
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        env:
+        - name: ENVIRONMENT
+          value: staging
+        - name: SCRIPT_NAME
+          value: /maps
+        - name: FLASK_APP
+          value: src/map_storage/wsgi.py
+        - name: ALLOWED_ORIGINS
+          value: https://caffeine.dd-decaf.eu,https://staging.dd-decaf.eu,http://localhost:4200
+        - name: SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: map-storage-staging
+              key: SENTRY_DSN
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: map-storage-staging
+              key: SECRET_KEY
+        - name: POSTGRES_HOST
+          value: cloudsql-proxy
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_DB_NAME
+          value: maps_staging
+        - name: POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: map-storage-staging
+              key: POSTGRES_USERNAME
+        - name: POSTGRES_PASS
+          valueFrom:
+            secretKeyRef:
+              name: map-storage-staging
+              key: POSTGRES_PASS
+        - name: IAM_API
+          value: http://iam-staging/iam
+        command: ["gunicorn", "-c", "gunicorn.py", "map_storage.wsgi:app"]
+        resources:
+          requests:
+            cpu: "10m"
+          limits:
+            cpu: "2000m"

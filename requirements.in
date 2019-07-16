@@ -1,4 +1,16 @@
 Flask
 Flask-Cors
-flask-restplus
+flask-apispec
 raven[flask]
+requests
+python-jose
+
+# Database
+flask-migrate
+flask-sqlalchemy
+psycopg2
+sqlalchemy
+alembic
+
+# Other libs
+jsonschema

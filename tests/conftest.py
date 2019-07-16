@@ -15,18 +15,23 @@
 
 """Provide session level fixtures."""
 
-import pytest
+import json
 
-from filemapsservice.app import api
-from filemapsservice.app import app as app_
-from filemapsservice.app import init_app
+import pytest
+from jose import jwt
+
+from map_storage.app import app as app_
+from map_storage.app import init_app
+from map_storage.models import Map
+from map_storage.models import db as db_
 
 
 @pytest.fixture(scope="session")
 def app():
     """Provide an initialized Flask for use in certain test cases."""
-    init_app(app_, api)
-    return app_
+    init_app(app_)
+    with app_.app_context():
+        yield app_
 
 
 @pytest.fixture(scope="session")
@@ -34,3 +39,100 @@ def client(app):
     """Provide a Flask test client to be used by almost all test cases."""
     with app.test_client() as client:
         yield client
+
+
+@pytest.fixture(scope="session")
+def reset_tables(app):
+    """Ensure a clean database."""
+    # Clean up anything that might reside in the testing database.
+    db_.session.remove()
+    db_.drop_all()
+    # Re-create tables.
+    db_.create_all()
+
+
+@pytest.fixture(scope="session")
+def connection(app):
+    """
+    Use a connection such that transactions can be used.
+
+    Notes
+    -----
+    Follows a transaction pattern described in the following:
+    http://docs.sqlalchemy.org/en/latest/orm/session_transaction.html#session-begin-nested
+
+    """
+    with db_.engine.connect() as connection:
+        yield connection
+
+
+@pytest.fixture(scope="function")
+def session(reset_tables, connection):
+    """
+    Create a transaction and session per test unit.
+
+    Rolling back a transaction removes even committed rows
+    (``session.commit``) from the database.
+
+    https://docs.sqlalchemy.org/en/latest/orm/session_transaction.html#joining-a-session-into-an-external-transaction-such-as-for-test-suites
+    """
+    flask_sqlalchemy_session = db_.session
+    transaction = connection.begin()
+    db_.session = db_.create_scoped_session(
+        options={"bind": connection, "binds": {}})
+    yield db_.session
+    db_.session.close()
+    transaction.rollback()
+    db_.session = flask_sqlalchemy_session
+
+
+@pytest.fixture(scope="function")
+def map_fixtures(session):
+    """Return test fixtures for the Map data model."""
+    fixture1 = Map(
+        id=1,
+        project_id=None,
+        name="Map one",
+        model_id=1,
+        map={"foo": "bar"},
+    )
+    fixture2 = Map(
+        id=2,
+        project_id=1,
+        name="Map two",
+        model_id=2,
+        map={"foo": "bar"},
+    )
+    session.add(fixture1)
+    session.add(fixture2)
+    session.commit()
+    return fixture1, fixture2
+
+
+@pytest.fixture(scope="session")
+def ecoli_map():
+    """Return a dict of the e. coli core metabolism map."""
+    with open("tests/data/e_coli_core.Core metabolism.json") as file_:
+        return json.load(file_)
+
+
+@pytest.fixture(scope="session")
+def tokens(app):
+    """Provide read, write and admin JWT claims to project 1."""
+    return {
+        'read': jwt.encode(
+            {'prj': {1: 'read'}},
+            app.config['JWT_PRIVATE_KEY'],
+            'RS512',
+        ),
+        'write': jwt.encode(
+            {'prj': {1: 'write'}},
+            app.config['JWT_PRIVATE_KEY'],
+            'RS512',
+        ),
+        'admin': jwt.encode(
+            {'prj': {1: 'admin'}},
+            app.config['JWT_PRIVATE_KEY'],
+            'RS512',
+        ),
+    }

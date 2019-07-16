@@ -1,0 +1,3 @@
+Schema downloaded from: https://github.com/zakandrewking/escher/tree/master/jsonschema
+
+A few `additionalProperties: true` have been set to accommodate maps that used notes fields.

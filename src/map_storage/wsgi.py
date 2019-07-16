@@ -1,6 +1,5 @@
-#!/usr/bin/env bash
-
-# Copyright 2018 Novo Nordisk Foundation Center for Biosustainability, DTU.
+# Copyright (c) 2018, Novo Nordisk Foundation Center for Biosustainability,
+# Technical University of Denmark.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,15 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -xeu
+"""Prepare the application for use by the WSGI server (gunicorn)."""
 
-if [ "${TRAVIS_BRANCH}" = "master" ]; then
-  DEPLOYMENT=map-storage-production
-elif [ "${TRAVIS_BRANCH}" = "devel" ]; then
-  DEPLOYMENT=map-storage-staging
-else
-  echo "Skipping deployment for branch ${TRAVIS_BRANCH}"
-  exit 0
-fi
+from map_storage.app import app, init_app
 
-kubectl set image deployment/${DEPLOYMENT} web=${IMAGE_REPO}:${TRAVIS_COMMIT::12}
+
+init_app(app)

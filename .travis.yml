@@ -4,6 +4,11 @@ language: minimal
 git:
   depth: 2
 
+branches:
+  only:
+  - master
+  - devel
+
 services:
   - docker
 
@@ -11,9 +16,6 @@ env:
   global:
     - IMAGE_REPO=gcr.io/dd-decaf-cfbf6/maps
     - IMAGE_TAG=${TRAVIS_BRANCH}
-
-before_install:
-  - echo ${DOCKER_PASSWORD} | docker login -u=decaftravis --password-stdin
 
 install:
   - docker build -t ${IMAGE_REPO}:${TRAVIS_COMMIT::12} -t ${IMAGE_REPO}:${TRAVIS_BRANCH} .
@@ -42,7 +44,7 @@ notifications:
   email: false
   slack:
     rooms:
-      secure: fQySVU6NMlQq6va8e+/0EmFcMVv1na4GhfuEkh3ojcgdHJAIXHWiwB9d2iMr+ED6GMFzJ+pL/kbX1whKQFk4MpVrrdZWVgiH78Qrk//mW+kXNT9dMQZYWSiqgq7so1bn3UvsStOf0h9hVhWv/trK2C35lp4L8OJ5u4D4EnDsTVaaeIxTsiY3FXDAs+0crM+lq+wKrBaPJnRqHAY6DL2UusOabCjcFwFvqfz0iefM7nvK81mswqBHDvNJmtIsKJca1/oETbhmusNpjj6bB/LP2h+X3izIP1wlHq6FPiCYU21mdNJO9O8X3zehJsSqzC3sLHahRa2qB0wOUvzLKJcRfx0bS00g4qCmGhBcJDS59qjJG3rfXVM7sfhuYeINsubw9HKkq1Rg+ZCjRL9qo/Ve2uDl2CZsTBtmp77Bu4cz1GsAjq5587NwNz7ecqCOr8L6TmFh/ADRW4F/igPym+efqL93mAH0mnDCxyBeZ6f4Yg3tf0QkdsdGPTMBLpq8dHmcWLBEoGKMsODPbHYEFYZWocMVCzyVenLPrEwcNqVqwRbJose7IBPQTeOn3d6vxSPEAf/ULOCwwGYupKWCpXDxZS5jKo85SW1fTsw53So9rKSHikFxW3VdHBzzvhnP+Trl0/+fChne/axYwQe53BsmnGqTVSMir0L9g5QyDsQHrm8=
+      - secure: "MBzAae9VJHJdGeEkXglgM0VVi3/dClw+aJDYU8hB6/GzVZYF4dayHWyWHoSePnEf37akWP21Y8iGH3swlGioN4+GBMMJOmu9VtF6JkYLyC4bL5B4E8wTBFFLH3n9wazzVN8jwpBDlOkKmpWH2+h3TxfhISVWU8tro5+DBKp05Di5thoPdQZSJgKZvskG/yOWHJKWleqVSukxnBjWpyWoqRrWOMlQpxJgul/ibuzdWcooh9GVfoSkK+C3HqXJjyUcHpP/SvP/jTYDWAjobeFknwLsKKv9RXBmbN8IduiKP1G/SjWpqv2DH/z9xJ7UiKutJI79qJda+MKe512k0HfOjb560zrAc0oPRMYBMrJaYiCQCkcxRt8/QwaugXc5XoMB7Aqxtelb0kPv28Oall8BAf2MxZC18F+Ic6Tckx8iDU32K/l+bi2KMU157Key1FiL2cqrAoCFwYaEVa/70a1BbsMW8ckWdyB5FJZYnfz8fLPiMu3/n79+kjeMqAYQ7oEjSzFwgzXleWh0m1863Vd/xqQfq+WqOw/eB9AfDSMoJSIlx4ZqHGJS801PDLEykDWZ9Th/5iSkt7RCSkozNOOs09KMgjlZ7crXnmfh7N1J5lK/+V1zOWMUtWZX1LgnJzL4Y1oDtkgUTywCVX+BZF1JQGKbNJxW9XJ/3IJa+aClpm8="
     on_success: change
     on_failure: change
     on_pull_requests: false
