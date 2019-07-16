@@ -22,7 +22,7 @@ spec:
         - name: ENVIRONMENT
           value: staging
         - name: SCRIPT_NAME
-          value: /maps
+          value: /map-storage
         - name: FLASK_APP
           value: src/map_storage/wsgi.py
         - name: ALLOWED_ORIGINS
