@@ -6,3 +6,4 @@ flake8-docstrings
 pydocstyle==3.0.0
 isort
 safety
+ipython
