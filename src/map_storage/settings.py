@@ -52,7 +52,10 @@ class Default:
         self.APISPEC_TITLE = "Memote Webservice"
         self.APISPEC_SWAGGER_UI_URL = "/"
         self.SQLALCHEMY_DATABASE_URI = (
-            'postgresql://postgres:@postgres:5432/maps'
+            f"postgresql://{os.environ['POSTGRES_USERNAME']}:"
+            f"{os.environ['POSTGRES_PASS']}@{os.environ['POSTGRES_HOST']}:"
+            f"{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB_NAME']}"
+            f"?connect_timeout=10"
         )
         self.SQLALCHEMY_TRACK_MODIFICATIONS = False
         self.CORS_ORIGINS = os.environ['ALLOWED_ORIGINS'].split(',')
@@ -131,9 +134,3 @@ class Production(Default):
         self.DEBUG = False
         self.SECRET_KEY = os.environ['SECRET_KEY']
         self.LOGGING['root']['level'] = 'INFO'
-        self.SQLALCHEMY_DATABASE_URI = (
-            f"postgresql://{os.environ['POSTGRES_USERNAME']}:"
-            f"{os.environ['POSTGRES_PASS']}@{os.environ['POSTGRES_HOST']}:"
-            f"{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB_NAME']}"
-            f"?connect_timeout=10"
-        )
