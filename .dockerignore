@@ -4,6 +4,6 @@
 !tests/
 !jsonschema/
 !migrations/
+!requirements/
 !gunicorn.py
 !setup.cfg
-!*requirements.in
