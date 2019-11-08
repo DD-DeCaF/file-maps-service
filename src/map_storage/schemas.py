@@ -46,7 +46,7 @@ class EscherMap(fields.Field):
         with open("jsonschema/1-0-0") as file_:
             self._escher_schema = json.load(file_)
 
-    def _deserialize(self, value, attr, data):
+    def _deserialize(self, value, attr, data, **kwargs):
         try:
             validate(value, self._escher_schema)
         except JSONSchemaValidationError as error:
