@@ -22,8 +22,8 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_migrate import Migrate
 from raven.contrib.flask import Sentry
-from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.exceptions import HTTPException
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from . import errorhandlers, jwt, resources
 
