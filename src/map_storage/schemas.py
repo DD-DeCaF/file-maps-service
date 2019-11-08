@@ -50,7 +50,7 @@ class EscherMap(fields.Field):
         try:
             validate(value, self._escher_schema)
         except JSONSchemaValidationError as error:
-            raise ValidationError(error.message)
+            raise ValidationError(error.message)  # noqa: B306
         else:
             return value
 
