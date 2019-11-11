@@ -27,6 +27,17 @@ from .models import db
 from .schemas import Map, MapListFilter
 
 
+def init_app(app):
+    """Register API resources on the provided Flask application."""
+    def register(path, resource):
+        app.add_url_rule(path, view_func=resource.as_view(resource.__name__))
+        docs.register(resource, endpoint=resource.__name__)
+
+    docs = FlaskApiSpec(app)
+    register("/maps", Maps)
+    register("/maps/<int:map_id>", Map)
+
+
 @doc(description="List all the maps available")
 class Maps(MethodResource):
     @use_kwargs(MapListFilter)
@@ -120,14 +131,3 @@ class Map(MethodResource):
             db.session.delete(map)
             db.session.commit()
             return make_response('', 204)
-
-
-def init_app(app):
-    """Register API resources on the provided Flask application."""
-    def register(path, resource):
-        app.add_url_rule(path, view_func=resource.as_view(resource.__name__))
-        docs.register(resource, endpoint=resource.__name__)
-
-    docs = FlaskApiSpec(app)
-    register("/maps", Maps)
-    register("/maps/<int:map_id>", Map)
