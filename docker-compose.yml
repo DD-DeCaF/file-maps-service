@@ -31,12 +31,14 @@ services:
       - POSTGRES_PORT=${POSTGRES_PORT:-5432}
       - POSTGRES_DB_NAME=${POSTGRES_DB_NAME:-postgres}
       - POSTGRES_USERNAME=${POSTGRES_USERNAME:-postgres}
-      - POSTGRES_PASS=${POSTGRES_PASS:-}
+      - POSTGRES_PASS=${POSTGRES_PASS:-secret}
 
   postgres:
     image: postgres:9.6-alpine
     networks:
     - default
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASS:-secret}
 
 # Additional services that the `web` service `depends_on` should usually only
 # be on the default network and not exposed on the general network, i.e.,

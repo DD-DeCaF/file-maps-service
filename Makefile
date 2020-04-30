@@ -1,4 +1,4 @@
-.PHONY: setup lock own build push start qa style safety test qc stop clean logs
+.PHONY: setup lock own build post-build push start qa style safety test qc stop clean logs
 
 ################################################################################
 # Variables                                                                    #
@@ -81,6 +81,9 @@ databases:
 	docker-compose exec postgres psql -U postgres -c "create database maps_test;"
 	docker-compose run --rm web flask db upgrade
 	docker-compose stop
+
+## Run post-build initialization. Only run once!
+post-build: databases
 
 ## Start all services in the background.
 start:
