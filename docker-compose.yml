@@ -4,6 +4,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - BASE_TAG=${BASE_TAG}
+        - BUILD_COMMIT=${BUILD_COMMIT:-unknown}
+        - BUILD_TIMESTAMP=${BUILD_TIMESTAMP:-unknown}
     image: gcr.io/dd-decaf-cfbf6/maps:${IMAGE_TAG:-latest}
     networks:
       default:
@@ -28,7 +32,6 @@ services:
       - POSTGRES_DB_NAME=${POSTGRES_DB_NAME:-postgres}
       - POSTGRES_USERNAME=${POSTGRES_USERNAME:-postgres}
       - POSTGRES_PASS=${POSTGRES_PASS:-}
-    command: gunicorn -c gunicorn.py map_storage.wsgi:app
 
   postgres:
     image: postgres:9.6-alpine
