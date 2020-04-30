@@ -29,7 +29,7 @@ services:
       - IAM_API=${IAM_API:-https://api-staging.dd-decaf.eu/iam}
       - POSTGRES_HOST=${POSTGRES_HOST:-postgres}
       - POSTGRES_PORT=${POSTGRES_PORT:-5432}
-      - POSTGRES_DB_NAME=${POSTGRES_DB_NAME:-postgres}
+      - POSTGRES_DB_NAME=${POSTGRES_DB_NAME:-maps}
       - POSTGRES_USERNAME=${POSTGRES_USERNAME:-postgres}
       - POSTGRES_PASS=${POSTGRES_PASS:-secret}
 
