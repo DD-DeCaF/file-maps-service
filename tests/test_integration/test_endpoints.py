@@ -61,7 +61,7 @@ def test_post_map(client, session, tokens, ecoli_map):
             "model_id": 1,
             "map": ecoli_map,
         },
-        headers={"Authorization": f"Bearer {tokens['write']}",},
+        headers={"Authorization": f"Bearer {tokens['write']}"},
     )
     assert response.status_code == 201
 
@@ -84,7 +84,7 @@ def test_put_map(client, session, map_fixtures, tokens):
     response = client.put(
         f"/maps/{map_fixtures[1].id}",
         json={"id": 4, "name": "Changed name"},
-        headers={"Authorization": f"Bearer {tokens['write']}",},
+        headers={"Authorization": f"Bearer {tokens['write']}"},
     )
     assert response.status_code == 204
 
@@ -95,6 +95,6 @@ def test_put_map(client, session, map_fixtures, tokens):
 def test_delete_map(client, session, map_fixtures, tokens):
     response = client.delete(
         f"/maps/{map_fixtures[1].id}",
-        headers={"Authorization": f"Bearer {tokens['admin']}",},
+        headers={"Authorization": f"Bearer {tokens['admin']}"},
     )
     assert response.status_code == 204
