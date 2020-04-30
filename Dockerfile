@@ -32,9 +32,6 @@ ARG CWD="/app"
 
 ENV PYTHONPATH="${CWD}/src"
 
-RUN addgroup -S -g "${GID}" "${APP_USER}" && \
-    adduser -S -H -u "${UID}" -G "${APP_USER}" "${APP_USER}"
-
 WORKDIR "${CWD}"
 
 COPY requirements ./requirements/
