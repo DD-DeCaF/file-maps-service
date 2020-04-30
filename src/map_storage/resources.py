@@ -19,7 +19,12 @@ import warnings
 
 from flask import abort, g, make_response
 from flask_apispec import (
-    FlaskApiSpec, MethodResource, doc, marshal_with, use_kwargs)
+    FlaskApiSpec,
+    MethodResource,
+    doc,
+    marshal_with,
+    use_kwargs,
+)
 from sqlalchemy.orm import load_only
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -31,6 +36,7 @@ from .schemas import Map, MapListFilter
 
 def init_app(app):
     """Register API resources on the provided Flask application."""
+
     def register(path, resource):
         app.add_url_rule(path, view_func=resource.as_view(resource.__name__))
         with warnings.catch_warnings():
@@ -45,33 +51,32 @@ def init_app(app):
 @doc(description="List all the maps available")
 class Maps(MethodResource):
     @use_kwargs(MapListFilter)
-    @marshal_with(Map(many=True, exclude=('map',)), code=200)
+    @marshal_with(Map(many=True, exclude=("map",)), code=200)
     def get(self, model_id=None):
-        maps = MapModel.query.options(load_only(
-            MapModel.id,
-            MapModel.project_id,
-            MapModel.name,
-            MapModel.model_id,
-        )).filter(
-            MapModel.project_id.in_(g.jwt_claims['prj']) |  # noqa: W504
-            MapModel.project_id.is_(None)
+        maps = MapModel.query.options(
+            load_only(
+                MapModel.id,
+                MapModel.project_id,
+                MapModel.name,
+                MapModel.model_id,
+            )
+        ).filter(
+            MapModel.project_id.in_(g.jwt_claims["prj"])
+            | MapModel.project_id.is_(None)  # noqa: W504
         )
         if model_id:
             maps = maps.filter(MapModel.model_id == model_id)
         return maps.all()
 
-    @use_kwargs(Map(exclude=('id',)))
-    @marshal_with(Map(only=('id',)), code=201)
+    @use_kwargs(Map(exclude=("id",)))
+    @marshal_with(Map(only=("id",)), code=201)
     @marshal_with(None, code=401)
     @marshal_with(None, code=403)
     @jwt_required
     def post(self, project_id, name, model_id, map):
-        jwt_require_claim(project_id, 'write')
+        jwt_require_claim(project_id, "write")
         map = MapModel(
-            project_id=project_id,
-            name=name,
-            model_id=model_id,
-            map=map,
+            project_id=project_id, name=name, model_id=model_id, map=map,
         )
         db.session.add(map)
         db.session.commit()
@@ -84,36 +89,40 @@ class Map(MethodResource):
     @marshal_with(None, code=404)
     def get(self, map_id):
         try:
-            return MapModel.query.filter(
-                MapModel.id == map_id
-            ).filter(
-                MapModel.project_id.in_(g.jwt_claims['prj']) |  # noqa: W504
-                MapModel.project_id.is_(None)
-            ).one()
+            return (
+                MapModel.query.filter(MapModel.id == map_id)
+                .filter(
+                    MapModel.project_id.in_(g.jwt_claims["prj"])
+                    | MapModel.project_id.is_(None)  # noqa: W504
+                )
+                .one()
+            )
         except NoResultFound:
             abort(404, f"Cannot find map with id {map_id}")
 
-    @use_kwargs(Map(exclude=('id',), partial=True))
+    @use_kwargs(Map(exclude=("id",), partial=True))
     @marshal_with(None, code=200)
     @marshal_with(None, code=401)
     @marshal_with(None, code=403)
     @marshal_with(None, code=404)
     def put(self, map_id, **payload):
         try:
-            map = MapModel.query.filter(
-                MapModel.id == map_id
-            ).filter(
-                MapModel.project_id.in_(g.jwt_claims['prj']) |  # noqa: W504
-                MapModel.project_id.is_(None)
-            ).one()
+            map = (
+                MapModel.query.filter(MapModel.id == map_id)
+                .filter(
+                    MapModel.project_id.in_(g.jwt_claims["prj"])
+                    | MapModel.project_id.is_(None)  # noqa: W504
+                )
+                .one()
+            )
         except NoResultFound:
             abort(404, f"Cannot find map with id {map_id}")
         else:
-            jwt_require_claim(map.project_id, 'write')
+            jwt_require_claim(map.project_id, "write")
             for key, value in payload.items():
                 setattr(map, key, value)
             db.session.commit()
-            return make_response('', 204)
+            return make_response("", 204)
 
     @marshal_with(None, code=204)
     @marshal_with(None, code=401)
@@ -122,16 +131,18 @@ class Map(MethodResource):
     @jwt_required
     def delete(self, map_id):
         try:
-            map = MapModel.query.filter(
-                MapModel.id == map_id
-            ).filter(
-                MapModel.project_id.in_(g.jwt_claims['prj']) |  # noqa: W504
-                MapModel.project_id.is_(None)
-            ).one()
+            map = (
+                MapModel.query.filter(MapModel.id == map_id)
+                .filter(
+                    MapModel.project_id.in_(g.jwt_claims["prj"])
+                    | MapModel.project_id.is_(None)  # noqa: W504
+                )
+                .one()
+            )
         except NoResultFound:
             abort(404, f"Cannot find map with id {map_id}")
         else:
-            jwt_require_claim(map.project_id, 'admin')
+            jwt_require_claim(map.project_id, "admin")
             db.session.delete(map)
             db.session.commit()
-            return make_response('', 204)
+            return make_response("", 204)

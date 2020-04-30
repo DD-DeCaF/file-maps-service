@@ -25,7 +25,7 @@ def test_get_maps(client, session, map_fixtures):
 
 def test_get_public_maps(client, session, map_fixtures):
     response = client.get("/maps")
-    assert all([m['project_id'] is None for m in response.json])
+    assert all([m["project_id"] is None for m in response.json])
 
 
 def test_get_maps_filtered(client, session, map_fixtures):
@@ -56,14 +56,12 @@ def test_post_map(client, session, tokens, ecoli_map):
     response = client.post(
         f"/maps",
         json={
-            'project_id': 1,
-            'name': "Testmap",
-            'model_id': 1,
-            'map': ecoli_map,
+            "project_id": 1,
+            "name": "Testmap",
+            "model_id": 1,
+            "map": ecoli_map,
         },
-        headers={
-            'Authorization': f"Bearer {tokens['write']}",
-        },
+        headers={"Authorization": f"Bearer {tokens['write']}",},
     )
     assert response.status_code == 201
 
@@ -72,12 +70,12 @@ def test_post_invalid_map(client, session, tokens):
     response = client.post(
         f"/maps",
         json={
-            'project_id': 1,
-            'name': "Testmap",
-            'model_id': 1,
-            'map': {"foo": "bar"},
+            "project_id": 1,
+            "name": "Testmap",
+            "model_id": 1,
+            "map": {"foo": "bar"},
         },
-        headers={'Authorization': f"Bearer {tokens['write']}"},
+        headers={"Authorization": f"Bearer {tokens['write']}"},
     )
     assert response.status_code == 422
 
@@ -85,10 +83,8 @@ def test_post_invalid_map(client, session, tokens):
 def test_put_map(client, session, map_fixtures, tokens):
     response = client.put(
         f"/maps/{map_fixtures[1].id}",
-        json={'id': 4, 'name': "Changed name"},
-        headers={
-            'Authorization': f"Bearer {tokens['write']}",
-        },
+        json={"id": 4, "name": "Changed name"},
+        headers={"Authorization": f"Bearer {tokens['write']}",},
     )
     assert response.status_code == 204
 
@@ -97,7 +93,8 @@ def test_put_map(client, session, map_fixtures, tokens):
 
 
 def test_delete_map(client, session, map_fixtures, tokens):
-    response = client.delete(f"/maps/{map_fixtures[1].id}", headers={
-        'Authorization': f"Bearer {tokens['admin']}",
-    })
+    response = client.delete(
+        f"/maps/{map_fixtures[1].id}",
+        headers={"Authorization": f"Bearer {tokens['admin']}",},
+    )
     assert response.status_code == 204
