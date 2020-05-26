@@ -54,7 +54,7 @@ def test_get_map_not_found(client, session, map_fixtures):
 
 def test_post_map(client, session, tokens, ecoli_map):
     response = client.post(
-        f"/maps",
+        "/maps",
         json={
             "project_id": 1,
             "name": "Testmap",
@@ -68,7 +68,7 @@ def test_post_map(client, session, tokens, ecoli_map):
 
 def test_post_invalid_map(client, session, tokens):
     response = client.post(
-        f"/maps",
+        "/maps",
         json={
             "project_id": 1,
             "name": "Testmap",
