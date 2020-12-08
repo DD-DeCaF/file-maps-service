@@ -1,10 +1,11 @@
-# Copyright 2018 Novo Nordisk Foundation Center for Biosustainability, DTU.
+# Copyright (c) 2018-2020 Novo Nordisk Foundation Center for Biosustainability,
+# Technical University of Denmark.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#    https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,28 +13,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM dddecaf/postgres-base:master
+ARG BASE_TAG=alpine
 
-ENV APP_USER=giraffe
+FROM dddecaf/postgres-base:${BASE_TAG}
 
-ARG UID=1000
-ARG GID=1000
+ARG BASE_TAG=alpine
+ARG BUILD_COMMIT
+
+LABEL dk.dtu.biosustain.map-storage.alpine.vendor="Novo Nordisk Foundation \
+Center for Biosustainability, Technical University of Denmark"
+LABEL maintainer="niso@biosustain.dtu.dk"
+LABEL dk.dtu.biosustain.map-storage.alpine.build.base-tag="${BASE_TAG}"
+LABEL dk.dtu.biosustain.map-storage.alpine.build.commit="${BUILD_COMMIT}"
 
 ARG CWD="/app"
 
 ENV PYTHONPATH="${CWD}/src"
 
-RUN addgroup -S -g "${GID}" "${APP_USER}" && \
-    adduser -S -H -u "${UID}" -G "${APP_USER}" "${APP_USER}"
-
 WORKDIR "${CWD}"
 
-COPY requirements ./requirements
+COPY requirements ./requirements/
 
-RUN apk add --no-cache build-base && \
-    pip-sync requirements/requirements.txt && \
-    apk del build-base
+RUN set -eux \
+    && pip install -r requirements/requirements.txt \
+    && rm -rf /root/.cache/pip
 
-COPY . "${CWD}/"
+COPY . ./
 
-RUN chown -R "${APP_USER}:${APP_USER}" "${CWD}"
+RUN chown -R "${APP_USER}:${APP_USER}" .
+
+EXPOSE 8000
+
+CMD ["gunicorn", "-c", "gunicorn.py", "map_storage.wsgi:app"]

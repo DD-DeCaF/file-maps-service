@@ -28,8 +28,7 @@ class StrictSchema(Schema):
 
 class MapListFilter(StrictSchema):
     model_id = fields.Integer(
-        required=False,
-        description="ID of an optional model to filter by",
+        required=False, description="ID of an optional model to filter by",
     )
 
 

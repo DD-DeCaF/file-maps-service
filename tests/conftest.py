@@ -79,7 +79,8 @@ def session(reset_tables, connection):
     flask_sqlalchemy_session = db_.session
     transaction = connection.begin()
     db_.session = db_.create_scoped_session(
-        options={"bind": connection, "binds": {}})
+        options={"bind": connection, "binds": {}}
+    )
     yield db_.session
     db_.session.close()
     transaction.rollback()
@@ -90,18 +91,10 @@ def session(reset_tables, connection):
 def map_fixtures(session):
     """Return test fixtures for the Map data model."""
     fixture1 = Map(
-        id=1,
-        project_id=None,
-        name="Map one",
-        model_id=1,
-        map={"foo": "bar"},
+        id=1, project_id=None, name="Map one", model_id=1, map={"foo": "bar"},
     )
     fixture2 = Map(
-        id=2,
-        project_id=1,
-        name="Map two",
-        model_id=2,
-        map={"foo": "bar"},
+        id=2, project_id=1, name="Map two", model_id=2, map={"foo": "bar"},
     )
     session.add(fixture1)
     session.add(fixture2)
@@ -120,19 +113,13 @@ def ecoli_map():
 def tokens(app):
     """Provide read, write and admin JWT claims to project 1."""
     return {
-        'read': jwt.encode(
-            {'prj': {1: 'read'}},
-            app.config['JWT_PRIVATE_KEY'],
-            'RS512',
+        "read": jwt.encode(
+            {"prj": {1: "read"}}, app.config["JWT_PRIVATE_KEY"], "RS512",
         ),
-        'write': jwt.encode(
-            {'prj': {1: 'write'}},
-            app.config['JWT_PRIVATE_KEY'],
-            'RS512',
+        "write": jwt.encode(
+            {"prj": {1: "write"}}, app.config["JWT_PRIVATE_KEY"], "RS512",
         ),
-        'admin': jwt.encode(
-            {'prj': {1: 'admin'}},
-            app.config['JWT_PRIVATE_KEY'],
-            'RS512',
+        "admin": jwt.encode(
+            {"prj": {1: "admin"}}, app.config["JWT_PRIVATE_KEY"], "RS512",
         ),
     }
